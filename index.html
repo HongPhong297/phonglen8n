@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Khoá n8n — Tài liệu học viên</title>
+<style>
+  :root{ --ink:#e9eeff; --muted:#98a2c9; --line:rgba(255,255,255,.10); }
+  *{box-sizing:border-box}
+  body{
+    margin:0; padding:56px 20px 80px; background:#070d18; color:var(--ink);
+    font-family:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif; line-height:1.6;
+  }
+  body::before{
+    content:""; position:fixed; inset:0; z-index:0; pointer-events:none;
+    background:
+      radial-gradient(900px 600px at 10% -12%, rgba(59,130,246,.28), transparent 62%),
+      radial-gradient(760px 520px at 94% 0%, rgba(139,92,246,.20), transparent 60%),
+      radial-gradient(700px 600px at 50% 112%, rgba(34,211,238,.14), transparent 62%);
+  }
+  .wrap{max-width:880px; margin:0 auto; position:relative; z-index:1}
+  .kicker{display:inline-flex; gap:9px; align-items:center; font-size:12px; letter-spacing:.16em;
+    text-transform:uppercase; color:#cfe0ff; padding:6px 13px; border-radius:99px;
+    border:1px solid rgba(59,130,246,.5); background:rgba(59,130,246,.15)}
+  h1{font-size:clamp(30px,5vw,46px); line-height:1.08; letter-spacing:-.03em; margin:16px 0 10px;
+    background:linear-gradient(100deg,#fff,#93c5fd 55%,#67e8f9);
+    -webkit-background-clip:text; background-clip:text; color:transparent}
+  .sub{color:#c2ccef; max-width:640px; margin:0 0 34px; font-size:15.5px}
+  .grid{display:grid; gap:14px; grid-template-columns:1fr 1fr}
+  @media(max-width:720px){.grid{grid-template-columns:1fr}}
+  a.card{
+    display:block; text-decoration:none; color:inherit; padding:22px 22px 20px; border-radius:20px;
+    background:rgba(255,255,255,.045); border:1px solid var(--line);
+    transition:transform .2s, border-color .2s, background .2s;
+  }
+  a.card:hover{transform:translateY(-3px); border-color:rgba(96,165,250,.55); background:rgba(59,130,246,.09)}
+  a.card.wide{grid-column:1 / -1}
+  .tag{font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#93a4d4; margin-bottom:8px; display:block}
+  .card h2{margin:0 0 6px; font-size:19px; letter-spacing:-.01em}
+  .card p{margin:0; font-size:14.2px; color:#b9c4e6}
+  .arrow{float:right; color:#60a5fa; font-size:18px; line-height:1}
+  footer{margin-top:38px; color:#7d87ae; font-size:12.6px; border-top:1px solid var(--line); padding-top:16px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="kicker">Khoá n8n · Tài liệu học viên</div>
+  <h1>Tài liệu từng buổi</h1>
+  <p class="sub">Mở đúng buổi của mình, đọc đề, làm bài. Không cần tải file — mở là xem được, kể cả trên điện thoại.</p>
+
+  <div class="grid">
+    <a class="card" href="s1/">
+      <span class="tag">Buổi 1</span>
+      <h2>Sổ đăng ký tự động <span class="arrow">→</span></h2>
+      <p>Form đăng ký tự ghi vào sổ, bot Telegram báo tin, nộp trùng không tạo trùng.</p>
+    </a>
+
+    <a class="card" href="s2/">
+      <span class="tag">Buổi 2</span>
+      <h2>Hộp thư vào sổ <span class="arrow">→</span></h2>
+      <p>Email tới → file lên Drive theo ngày → một dòng vào Google Sheets, chạy lại không nhân đôi.</p>
+    </a>
+
+    <a class="card wide" href="s2/cap-quyen.html">
+      <span class="tag">Dùng chung · Buổi 2 trở đi</span>
+      <h2>🔑 Cấp quyền Google — 12 bước có ảnh <span class="arrow">→</span></h2>
+      <p>Làm một lần cho cả khoá. Có ảnh từng bước, có phần xử lý lỗi thường gặp. Kẹt ở đâu mở đúng bước đó.</p>
+    </a>
+  </div>
+
+  <footer>
+    Trang này chỉ chia sẻ trong lớp, không hiện trên Google. Link mở là xem, không cần đăng nhập.
+  </footer>
+</div>
+</body>
+</html>

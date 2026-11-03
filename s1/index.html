@@ -1,0 +1,417 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Buổi 1 — Sổ đăng ký tự động</title>
+<style>
+  :root{
+    --bg:#080b16; --ink:#e9edff; --muted:#98a2c9;
+    --violet:#8b5cf6; --cyan:#22d3ee; --emerald:#34d399; --amber:#fbbf24; --rose:#fb7185;
+    --card:rgba(255,255,255,.045); --line:rgba(255,255,255,.10);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; background:var(--bg); color:var(--ink); padding:0 18px 90px;
+    font-family:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+    line-height:1.62; -webkit-font-smoothing:antialiased;
+  }
+  body::before{
+    content:""; position:fixed; inset:0; z-index:0; pointer-events:none;
+    background:
+      radial-gradient(900px 620px at 10% -12%, rgba(139,92,246,.30), transparent 62%),
+      radial-gradient(820px 520px at 96% -6%, rgba(34,211,238,.20), transparent 60%),
+      radial-gradient(760px 620px at 48% 112%, rgba(251,113,133,.16), transparent 62%);
+  }
+  .wrap{max-width:960px; margin:0 auto; position:relative; z-index:1}
+
+  /* ---------- header ---------- */
+  header{padding:46px 0 10px}
+  .kicker{
+    display:inline-flex; align-items:center; gap:9px; font-size:12.5px; letter-spacing:.16em;
+    text-transform:uppercase; color:#cfd6ff; padding:7px 14px; border-radius:999px;
+    border:1px solid rgba(139,92,246,.55); background:linear-gradient(90deg,rgba(139,92,246,.22),rgba(34,211,238,.16));
+  }
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--emerald);box-shadow:0 0 0 4px rgba(52,211,153,.16);animation:pulse 2.4s infinite}
+  @keyframes pulse{50%{box-shadow:0 0 0 8px rgba(52,211,153,0)}}
+  h1{
+    font-size:clamp(34px,6vw,58px); line-height:1.04; letter-spacing:-.03em; margin:18px 0 22px;
+    background:linear-gradient(100deg,#fff 8%,#c4b5fd 42%,#67e8f9 78%,#fff 100%);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .hero-grid{display:grid; gap:14px; grid-template-columns:1.55fr 1fr}
+  @media(max-width:760px){.hero-grid{grid-template-columns:1fr}}
+
+  .product{
+    position:relative; border-radius:20px; padding:22px 24px; overflow:hidden;
+    background:linear-gradient(135deg,rgba(139,92,246,.20),rgba(34,211,238,.10) 55%,rgba(255,255,255,.03));
+    border:1px solid rgba(167,139,250,.42);
+    box-shadow:0 22px 60px -30px rgba(139,92,246,.85), inset 0 1px 0 rgba(255,255,255,.10);
+  }
+  .product::after{
+    content:""; position:absolute; inset:-40% -30% auto auto; width:280px; height:280px; border-radius:50%;
+    background:radial-gradient(circle,rgba(34,211,238,.42),transparent 65%); filter:blur(12px);
+  }
+  .label{font-size:11.5px; letter-spacing:.18em; text-transform:uppercase; color:#b9c2ee; margin-bottom:8px; display:block}
+  .product p{margin:0; font-size:clamp(17px,2.4vw,21px); font-weight:600; color:#fff; position:relative; z-index:1}
+  .product b{color:#a5f3fc; font-weight:800}
+
+  .submit{
+    border-radius:20px; padding:20px 20px; display:flex; gap:13px; align-items:flex-start;
+    background:linear-gradient(150deg,rgba(251,191,36,.20),rgba(251,191,36,.05));
+    border:1px solid rgba(251,191,36,.5);
+    box-shadow:0 20px 50px -34px rgba(251,191,36,.9), inset 0 1px 0 rgba(255,255,255,.12);
+  }
+  .submit .ico{font-size:22px; line-height:1.1}
+  .submit .label{color:#fde68a}
+  .submit p{margin:0; font-size:14.5px; color:#fff7e0}
+  .submit strong{color:#fbbf24}
+
+  /* ---------- sticky bar ---------- */
+  .bar{
+    position:sticky; top:0; z-index:20; margin:26px 0 4px; padding:11px 0;
+    background:linear-gradient(180deg,rgba(8,11,22,.94),rgba(8,11,22,.72));
+    backdrop-filter:blur(14px); border-bottom:1px solid rgba(255,255,255,.06);
+  }
+  .bar-in{display:flex; align-items:center; gap:14px; max-width:960px; margin:0 auto; padding:0 2px}
+  .bar span{font-size:12.5px; color:var(--muted); white-space:nowrap; font-variant-numeric:tabular-nums}
+  .track{flex:1; height:6px; border-radius:99px; background:rgba(255,255,255,.09); overflow:hidden}
+  .track i{display:block; height:100%; width:0; border-radius:99px; transition:width .45s cubic-bezier(.22,1,.36,1);
+    background:linear-gradient(90deg,var(--emerald),var(--cyan))}
+  .print{
+    border:1px solid var(--line); background:rgba(255,255,255,.05); color:var(--muted);
+    font:inherit; font-size:12px; padding:6px 12px; border-radius:99px; cursor:pointer;
+  }
+  .print:hover{color:#fff; border-color:rgba(255,255,255,.3)}
+
+  /* ---------- sections ---------- */
+  section{
+    position:relative; margin:26px 0; padding:26px 26px 28px; border-radius:22px;
+    background:var(--card); border:1px solid var(--line);
+    opacity:0; transform:translateY(16px); transition:opacity .55s ease, transform .55s cubic-bezier(.22,1,.36,1);
+  }
+  section.in{opacity:1; transform:none}
+  section::before{content:""; position:absolute; left:0; top:22px; bottom:22px; width:3px; border-radius:99px; background:var(--acc)}
+  section h2{display:flex; align-items:center; gap:12px; font-size:12.5px; letter-spacing:.16em; text-transform:uppercase; margin:0 0 16px; color:#cdd5ff}
+  .num{
+    display:grid; place-items:center; width:30px; height:30px; border-radius:10px; font-size:14px; font-weight:800;
+    color:#080b16; background:var(--acc); letter-spacing:0; box-shadow:0 8px 22px -10px var(--acc);
+  }
+  .lead{color:#dbe1ff; margin:0 0 14px; font-size:15.5px}
+
+  #s1{--acc:var(--violet)} #s2{--acc:var(--emerald)} #s3{--acc:var(--cyan)} #s4{--acc:var(--amber)} #s5{--acc:var(--rose)}
+
+  .story p{margin:0 0 12px; color:#d6dcff}
+  .story p:last-child{margin-bottom:0}
+  .hard{
+    margin-top:16px; padding:14px 16px; border-radius:14px; font-size:14.6px;
+    background:rgba(251,113,133,.10); border:1px dashed rgba(251,113,133,.45); color:#ffe4e9;
+  }
+  .hard b{color:#fb7185}
+
+  /* ---------- checkboxes ---------- */
+  .check{
+    display:flex; gap:13px; align-items:flex-start; padding:13px 15px; margin-bottom:9px; border-radius:14px;
+    background:rgba(255,255,255,.028); border:1px solid rgba(255,255,255,.07); cursor:pointer;
+    transition:background .2s, border-color .2s, transform .12s;
+  }
+  .check:hover{background:rgba(52,211,153,.07); border-color:rgba(52,211,153,.28)}
+  .check:active{transform:scale(.995)}
+  .check input{position:absolute; opacity:0; width:0; height:0}
+  .box{
+    flex:0 0 22px; width:22px; height:22px; margin-top:2px; border-radius:7px; border:2px solid rgba(255,255,255,.26);
+    display:grid; place-items:center; transition:all .2s; background:rgba(255,255,255,.03);
+  }
+  .box::after{content:"✓"; font-size:13px; font-weight:900; color:#04150f; opacity:0; transform:scale(.5); transition:all .18s}
+  .check input:checked + .box{background:var(--emerald); border-color:var(--emerald); box-shadow:0 0 0 4px rgba(52,211,153,.16)}
+  .check input:checked + .box::after{opacity:1; transform:scale(1)}
+  .check input:checked ~ .txt{color:#8b96bd; text-decoration:line-through; text-decoration-color:rgba(52,211,153,.6)}
+  .txt{font-size:15px; color:#e4e9ff; transition:color .2s}
+  .opt .txt{color:#b9c1e4}
+  .tag{font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; color:#fbbf24; border:1px solid rgba(251,191,36,.4); padding:2px 7px; border-radius:99px; margin-left:6px}
+
+  /* ---------- prompts ---------- */
+  .prompt{border-radius:16px; border:1px solid rgba(34,211,238,.20); background:rgba(34,211,238,.045); margin-bottom:13px; overflow:hidden}
+  .p-head{display:flex; align-items:center; gap:11px; padding:12px 15px; background:rgba(34,211,238,.07); border-bottom:1px solid rgba(34,211,238,.14)}
+  .p-num{font-size:17px; color:var(--cyan); font-weight:800}
+  .p-head h4{margin:0; font-size:14.5px; letter-spacing:.01em; color:#d9fbff; font-weight:700; flex:1}
+  .copy{
+    border:1px solid rgba(34,211,238,.4); background:rgba(34,211,238,.12); color:#a5f3fc; font:inherit;
+    font-size:12px; padding:5px 12px; border-radius:99px; cursor:pointer; transition:.2s; white-space:nowrap;
+  }
+  .copy:hover{background:rgba(34,211,238,.24); color:#fff}
+  .copy.ok{background:var(--emerald); border-color:var(--emerald); color:#04150f; font-weight:700}
+  pre.p-text{
+    margin:0; padding:15px; font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    font-size:13.2px; line-height:1.72; color:#dbe6ff; white-space:pre-wrap; word-break:break-word;
+  }
+  pre.p-text em{color:#7dd3fc; font-style:normal}
+
+  .rule{
+    margin-top:16px; padding:14px 16px; border-radius:14px; font-size:14.2px;
+    background:linear-gradient(90deg,rgba(34,211,238,.12),transparent); border-left:3px solid var(--cyan); color:#e6f9ff;
+  }
+  .rule b{color:#a5f3fc}
+
+  /* ---------- next ---------- */
+  .next{display:grid; gap:12px; grid-template-columns:1fr 1fr}
+  @media(max-width:700px){.next{grid-template-columns:1fr}}
+  .next-card{
+    padding:18px; border-radius:16px; background:rgba(251,191,36,.055); border:1px solid rgba(251,191,36,.26);
+    transition:transform .2s, border-color .2s, background .2s;
+  }
+  .next-card:hover{transform:translateY(-3px); border-color:rgba(251,191,36,.55); background:rgba(251,191,36,.09)}
+  .next-card h3{margin:0 0 6px; font-size:16px; color:#fde68a}
+  .next-card p{margin:0; font-size:14.3px; color:#dfe5ff}
+
+  /* ---------- glossary ---------- */
+  .terms{display:grid; gap:10px; grid-template-columns:1fr 1fr}
+  @media(max-width:700px){.terms{grid-template-columns:1fr}}
+  .term{padding:14px 16px; border-radius:14px; background:rgba(251,113,133,.055); border:1px solid rgba(251,113,133,.20)}
+  .term b{display:block; color:#fda4af; font-size:14px; margin-bottom:3px}
+  .term span{font-size:13.6px; color:#dfe5ff}
+
+  footer{
+    margin-top:34px; text-align:center; color:#7d87ae; font-size:13px;
+  }
+  .tagline{
+    max-width:660px; margin:-4px 0 26px; font-size:16px; line-height:1.65; color:#c3cbf0;
+  }
+  .tagline b{color:#a5f3fc; font-weight:700}
+  .budget{
+    display:inline-block; margin-bottom:12px; padding:9px 18px; border-radius:99px;
+    background:rgba(139,92,246,.14); border:1px solid rgba(139,92,246,.4); color:#ddd6fe; font-size:13.5px;
+  }
+
+  .toast{
+    position:fixed; left:50%; bottom:26px; transform:translate(-50%,20px); opacity:0; pointer-events:none;
+    background:linear-gradient(90deg,var(--emerald),var(--cyan)); color:#04150f; font-weight:800; font-size:13.5px;
+    padding:11px 22px; border-radius:99px; transition:.35s cubic-bezier(.22,1,.36,1); z-index:50;
+    box-shadow:0 18px 40px -18px rgba(52,211,153,.9);
+  }
+  .toast.on{opacity:1; transform:translate(-50%,0)}
+
+  @media print{
+    body{background:#fff; color:#111; padding:0}
+    body::before{display:none}
+    .bar,.copy,.print,.toast{display:none}
+    section{opacity:1; transform:none; border:1px solid #ddd; background:#fff; break-inside:avoid}
+    h1{color:#111; -webkit-text-fill-color:#111}
+    .product,.submit{background:#f6f6f9; border:1px solid #ddd}
+    .product p,.submit p,.story p,.txt,.lead,.next-card p,.term span{color:#111}
+    pre.p-text{color:#111; background:#f7f7fa}
+    .kicker{color:#333; border-color:#ccc}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="kicker"><span class="dot"></span> Buổi 1 / 8 · Khoá n8n</div>
+    <h1>Sổ đăng ký<br>tự động</h1>
+    <p class="tagline">Công cụ nào cũng đã có API. n8n nối chúng lại — <b>việc lặp để máy, việc nghĩ để bạn</b>.</p>
+
+    <div class="hero-grid">
+      <div class="product">
+        <span class="label">Sản phẩm cuối buổi</span>
+        <p>Một <b>form thật</b>, một <b>cuốn sổ tự ghi</b>, một <b>bot Telegram báo tin</b> — chạy được mà không cần ai ngồi canh.</p>
+      </div>
+      <div class="submit">
+        <div class="ico">📤</div>
+        <div>
+          <span class="label">Hôm nay nộp</span>
+          <p>Workflow ở trạng thái <strong>Active</strong> + <strong>2 dòng</strong> mô tả nó làm gì.</p>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="bar">
+    <div class="bar-in">
+      <span id="ptxt">0 / 4 nghiệm thu</span>
+      <div class="track"><i id="pfill"></i></div>
+      <button class="print" onclick="window.print()">In</button>
+    </div>
+  </div>
+
+  <!-- 1 -->
+  <section id="s1" class="in">
+    <h2><span class="num">1</span> Đề bài</h2>
+    <div class="story">
+      <p>Một trung tâm nhỏ nhận đăng ký qua form. Hiện tại: người ta điền form → bạn copy tay sang Excel → nhắn tin báo cho mình. Mất 2 phút mỗi lần, mà tuần nào cũng quên 1–2 người.</p>
+      <p>Bạn dựng: người điền form → hệ thống <b>tự ghi vào sổ</b> → <b>tự báo cho bạn</b>.</p>
+      <div class="hard">Một chỗ khó: cùng một người có thể nộp 2–3 lần (bấm F5, hoặc nộp lại vì tưởng lỗi). Sổ <b>không được</b> có 3 dòng cho 1 người.</div>
+    </div>
+  </section>
+
+  <!-- 2 -->
+  <section id="s2">
+    <h2><span class="num">2</span> Nghiệm thu</h2>
+    <p class="lead">Bốn dòng đầu là bắt buộc — tick khi nó đúng thật.</p>
+
+    <label class="check"><input type="checkbox" data-count><span class="box"></span>
+      <span class="txt">Nộp 3 lần cùng email → sổ có <b>1 dòng</b>, Telegram <b>1 tin</b></span></label>
+
+    <label class="check"><input type="checkbox" data-count><span class="box"></span>
+      <span class="txt">Nộp email mới → <b>+1 dòng</b>, <b>+1 tin</b></span></label>
+
+    <label class="check"><input type="checkbox" data-count><span class="box"></span>
+      <span class="txt"><code>A@Gmail.com</code> và <code>a@gmail.com</code> <b>không</b> tạo 2 dòng</span></label>
+
+    <label class="check"><input type="checkbox" data-count><span class="box"></span>
+      <span class="txt">Bấm chạy lại workflow (không nộp gì) → <b>không</b> thêm dòng nào</span></label>
+
+    <label class="check opt"><input type="checkbox"><span class="box"></span>
+      <span class="txt">Nêu được <b>một chỗ khác</b> trong công việc của bạn dùng đúng khuôn này <span class="tag">tuỳ chọn</span></span></label>
+  </section>
+
+  <!-- 3 -->
+  <section id="s3">
+    <h2><span class="num">3</span> Nhờ AI đúng cách</h2>
+    <p class="lead">Dán vào AI theo đúng thứ tự. Câu <b>⓪ làm trước tiên</b> — chưa kiểm tra kết nối thì mọi câu sau đều vô nghĩa.</p>
+
+    <div class="prompt">
+      <div class="p-head"><span class="p-num">⓪</span><h4>Kiểm tra n8n MCP</h4><button class="copy" data-copy>Copy</button></div>
+      <pre class="p-text">Kiểm tra kết nối n8n MCP giúp tôi: gọi công cụ health check, cho tôi biết đang trỏ tới instance nào, phiên bản n8n, và liệt kê 3 workflow gần nhất.</pre>
+    </div>
+
+    <div class="prompt">
+      <div class="p-head"><span class="p-num">①</span><h4>Muốn tạo workflow</h4><button class="copy" data-copy>Copy</button></div>
+      <pre class="p-text">Tôi muốn tạo một workflow: khi có người điền form đăng ký, tự ghi vào sổ (dùng Data Table của n8n) và báo Telegram cho tôi. Nếu cùng email nộp lại thì không tạo dòng mới.
+
+Input: {ho_ten, email, sdt, ghi_chu}
+Output tôi muốn: 1 dòng trong sổ + 1 tin Telegram "HV mới: &lt;tên&gt;"
+
+Đề xuất workflow tối đa 6 node, nói rõ mỗi node làm gì.</pre>
+    </div>
+
+    <div class="prompt">
+      <div class="p-head"><span class="p-num">②</span><h4>Nó chạy sai</h4><button class="copy" data-copy>Copy</button></div>
+      <pre class="p-text">Node đang sai: "Kiểm tra đã tồn tại"
+
+Input mẫu: lần 1 {email: "A@Gmail.com"}, lần 2 {email: "a@gmail.com"} — cùng một người
+Output hiện tại: cả 2 lần đều đi nhánh "chưa tồn tại" → sổ có 2 dòng
+Output tôi muốn: lần 2 phải đi nhánh "đã tồn tại"
+
+Chỉ sửa node này, đừng thêm node khác.</pre>
+    </div>
+
+    <div class="prompt">
+      <div class="p-head"><span class="p-num">③</span><h4>AI sửa mà vẫn sai, hoặc sửa xong bạn không hiểu</h4><button class="copy" data-copy>Copy</button></div>
+      <pre class="p-text">Đây là workflow của tôi: [dán nội dung workflow]
+
+Giải thích lại trong 5 câu, và chỉ ra chỗ nào có thể làm mất hoặc nhân đôi dữ liệu khi chạy lại.</pre>
+    </div>
+
+    <div class="rule"><b>Luật:</b> dán <b>error nguyên văn</b> + <b>input/output mẫu</b>, đừng chụp màn hình mờ. Và đừng cho AI viết lại cả workflow khi chỉ 1 node sai.</div>
+  </section>
+
+  <!-- 4 -->
+  <section id="s4">
+    <h2><span class="num">4</span> Làm tiếp</h2>
+    <p class="lead">Xong bài chính thì làm hai workflow sau — cùng kỹ năng, chỉ đổi nội dung.</p>
+
+    <div class="next">
+      <div class="next-card">
+        <h3>Báo cáo cuối ngày</h3>
+        <p>17:00 mỗi ngày, hệ thống đếm số người đăng ký mới trong ngày và gửi 1 tin. Bạn không phải mở máy.</p>
+      </div>
+      <div class="next-card">
+        <h3>Bot tra cứu</h3>
+        <p>Nhắn số điện thoại cho bot, nó trả về thông tin người đó đã đăng ký; không có thì báo "chưa đăng ký".</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 -->
+  <section id="s5">
+    <h2><span class="num">5</span> Thuật ngữ</h2>
+
+    <div class="terms">
+      <div class="term"><b>Trigger</b><span>Cái khởi động workflow: có form mới, tới giờ, có request gọi vào.</span></div>
+      <div class="term"><b>Node</b><span>Một bước xử lý.</span></div>
+      <div class="term"><b>Item</b><span>Một "dòng" dữ liệu chảy qua node. Nhiều item = node đó chạy nhiều lần.</span></div>
+      <div class="term"><b>Execution</b><span>Một lần chạy; xem được từng node nhận gì, trả gì.</span></div>
+      <div class="term"><b>Credential</b><span>Chìa khoá để n8n được phép vào một dịch vụ (Telegram, Google…).</span></div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="budget">✦ Chúc bạn sớm có một workflow chạy lúc 3 giờ sáng, trong khi bạn vẫn đang ngủ.</div>
+    <div>Buổi 1 / 8 · Sổ đăng ký tự động</div>
+  </footer>
+</div>
+
+<div class="toast" id="toast">Đủ nghiệm thu 🎉</div>
+
+<script>
+  // ---- nghiệm thu: tích + lưu + thanh tiến độ ----
+  var boxes = Array.prototype.slice.call(document.querySelectorAll('[data-count]'));
+  var key = 's1-nghiem-thu';
+  var fill = document.getElementById('pfill');
+  var ptxt = document.getElementById('ptxt');
+  var toast = document.getElementById('toast');
+  var wasFull = false;
+
+  try {
+    var saved = JSON.parse(localStorage.getItem(key) || '[]');
+    saved.forEach(function (v, i) { if (v && boxes[i]) boxes[i].checked = true; });
+  } catch (e) {}
+
+  function update() {
+    var done = boxes.filter(function (b) { return b.checked; }).length;
+    var pct = boxes.length ? Math.round(done / boxes.length * 100) : 0;
+    fill.style.width = pct + '%';
+    ptxt.textContent = done + ' / ' + boxes.length + ' nghiệm thu';
+    var full = done === boxes.length && boxes.length > 0;
+    if (full && !wasFull) {
+      toast.classList.add('on');
+      setTimeout(function () { toast.classList.remove('on'); }, 2600);
+    }
+    wasFull = full;
+    try { localStorage.setItem(key, JSON.stringify(boxes.map(function (b) { return b.checked; }))); } catch (e) {}
+  }
+
+  boxes.forEach(function (b) { b.addEventListener('change', update); });
+  update();
+
+  // ---- copy ----
+  function fallbackCopy(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); } catch (e) {}
+    document.body.removeChild(ta);
+  }
+
+  Array.prototype.forEach.call(document.querySelectorAll('[data-copy]'), function (btn) {
+    btn.addEventListener('click', function () {
+      var text = btn.closest('.prompt').querySelector('.p-text').innerText;
+      var ok = function () {
+        btn.textContent = 'Đã copy ✓';
+        btn.classList.add('ok');
+        setTimeout(function () { btn.textContent = 'Copy'; btn.classList.remove('ok'); }, 1700);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(ok).catch(function () { fallbackCopy(text); ok(); });
+      } else { fallbackCopy(text); ok(); }
+    });
+  });
+
+  // ---- hiện dần khi cuộn ----
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); }
+      });
+    }, { threshold: 0.12 });
+    Array.prototype.forEach.call(document.querySelectorAll('section'), function (s) { io.observe(s); });
+  } else {
+    Array.prototype.forEach.call(document.querySelectorAll('section'), function (s) { s.classList.add('in'); });
+  }
+</script>
+</body>
+</html>

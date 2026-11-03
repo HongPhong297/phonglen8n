@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Buổi 2 — Hộp thư vào sổ</title>
+<style>
+  :root{
+    --bg:#070d18; --ink:#e9eeff; --muted:#96a3c9;
+    --violet:#8b5cf6; --cyan:#22d3ee; --emerald:#34d399; --amber:#fbbf24; --rose:#fb7185; --blue:#60a5fa;
+    --card:rgba(255,255,255,.045); --line:rgba(255,255,255,.10);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; background:var(--bg); color:var(--ink); padding:0 18px 90px;
+    font-family:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+    line-height:1.62; -webkit-font-smoothing:antialiased;
+  }
+  body::before{
+    content:""; position:fixed; inset:0; z-index:0; pointer-events:none;
+    background:
+      radial-gradient(900px 620px at 8% -12%, rgba(59,130,246,.30), transparent 62%),
+      radial-gradient(820px 520px at 96% -4%, rgba(34,211,238,.18), transparent 60%),
+      radial-gradient(760px 620px at 50% 112%, rgba(139,92,246,.14), transparent 62%);
+  }
+  .wrap{max-width:960px; margin:0 auto; position:relative; z-index:1}
+
+  header{padding:46px 0 10px}
+  .kicker{
+    display:inline-flex; align-items:center; gap:9px; font-size:12.5px; letter-spacing:.16em;
+    text-transform:uppercase; color:#cfd9ff; padding:7px 14px; border-radius:999px;
+    border:1px solid rgba(59,130,246,.55); background:linear-gradient(90deg,rgba(59,130,246,.22),rgba(34,211,238,.14));
+  }
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--cyan);box-shadow:0 0 0 4px rgba(34,211,238,.16);animation:pulse 2.4s infinite}
+  @keyframes pulse{50%{box-shadow:0 0 0 8px rgba(34,211,238,0)}}
+  h1{
+    font-size:clamp(34px,6vw,58px); line-height:1.04; letter-spacing:-.03em; margin:18px 0 22px;
+    background:linear-gradient(100deg,#fff 8%,#93c5fd 42%,#67e8f9 78%,#fff 100%);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .tagline{max-width:680px; margin:-4px 0 18px; font-size:16px; line-height:1.65; color:#c3cbf0}
+  .tagline b{color:#a5f3fc; font-weight:700}
+
+  .authlink{
+    display:inline-flex; align-items:center; gap:9px; margin-bottom:26px; padding:10px 17px; border-radius:999px;
+    text-decoration:none; font-size:13.5px; font-weight:600; color:#dbeafe;
+    background:rgba(59,130,246,.13); border:1px solid rgba(59,130,246,.45); transition:.2s;
+  }
+  .authlink:hover{background:rgba(59,130,246,.26); color:#fff; transform:translateY(-1px)}
+
+  .hero-grid{display:grid; gap:14px; grid-template-columns:1.55fr 1fr}
+  @media(max-width:760px){.hero-grid{grid-template-columns:1fr}}
+  .product{
+    position:relative; border-radius:20px; padding:22px 24px; overflow:hidden;
+    background:linear-gradient(135deg,rgba(59,130,246,.22),rgba(34,211,238,.10) 55%,rgba(255,255,255,.03));
+    border:1px solid rgba(96,165,250,.42);
+    box-shadow:0 22px 60px -30px rgba(59,130,246,.9), inset 0 1px 0 rgba(255,255,255,.10);
+  }
+  .product::after{
+    content:""; position:absolute; inset:-40% -30% auto auto; width:280px; height:280px; border-radius:50%;
+    background:radial-gradient(circle,rgba(34,211,238,.40),transparent 65%); filter:blur(12px);
+  }
+  .label{font-size:11.5px; letter-spacing:.18em; text-transform:uppercase; color:#bfd3f8; margin-bottom:8px; display:block}
+  .product p{margin:0; font-size:clamp(17px,2.4vw,21px); font-weight:600; color:#fff; position:relative; z-index:1}
+  .product b{color:#a5f3fc; font-weight:800}
+  .submit{
+    border-radius:20px; padding:20px; display:flex; gap:13px; align-items:flex-start;
+    background:linear-gradient(150deg,rgba(251,191,36,.20),rgba(251,191,36,.05));
+    border:1px solid rgba(251,191,36,.5);
+    box-shadow:0 20px 50px -34px rgba(251,191,36,.9), inset 0 1px 0 rgba(255,255,255,.12);
+  }
+  .submit .ico{font-size:22px; line-height:1.1}
+  .submit .label{color:#fde68a}
+  .submit p{margin:0; font-size:14.5px; color:#fff7e0}
+  .submit strong{color:#fbbf24}
+
+  .bar{
+    position:sticky; top:0; z-index:20; margin:26px 0 4px; padding:11px 0;
+    background:linear-gradient(180deg,rgba(7,13,24,.94),rgba(7,13,24,.72));
+    backdrop-filter:blur(14px); border-bottom:1px solid rgba(255,255,255,.06);
+  }
+  .bar-in{display:flex; align-items:center; gap:14px; max-width:960px; margin:0 auto; padding:0 2px}
+  .bar span{font-size:12.5px; color:var(--muted); white-space:nowrap; font-variant-numeric:tabular-nums}
+  .track{flex:1; height:6px; border-radius:99px; background:rgba(255,255,255,.09); overflow:hidden}
+  .track i{display:block; height:100%; width:0; border-radius:99px; transition:width .45s cubic-bezier(.22,1,.36,1);
+    background:linear-gradient(90deg,var(--emerald),var(--cyan))}
+  .print{border:1px solid var(--line); background:rgba(255,255,255,.05); color:var(--muted); font:inherit; font-size:12px; padding:6px 12px; border-radius:99px; cursor:pointer}
+  .print:hover{color:#fff; border-color:rgba(255,255,255,.3)}
+
+  section{
+    position:relative; margin:26px 0; padding:26px 26px 28px; border-radius:22px;
+    background:var(--card); border:1px solid var(--line);
+    opacity:0; transform:translateY(16px); transition:opacity .55s ease, transform .55s cubic-bezier(.22,1,.36,1);
+  }
+  section.in{opacity:1; transform:none}
+  section::before{content:""; position:absolute; left:0; top:22px; bottom:22px; width:3px; border-radius:99px; background:var(--acc)}
+  section h2{display:flex; align-items:center; gap:12px; font-size:12.5px; letter-spacing:.16em; text-transform:uppercase; margin:0 0 16px; color:#cdd5ff}
+  .num{display:grid; place-items:center; width:30px; height:30px; border-radius:10px; font-size:14px; font-weight:800;
+    color:#080b16; background:var(--acc); letter-spacing:0; box-shadow:0 8px 22px -10px var(--acc)}
+  .lead{color:#dbe1ff; margin:0 0 14px; font-size:15.5px}
+  #s1{--acc:var(--blue)} #s2{--acc:var(--emerald)} #s3{--acc:var(--cyan)} #s4{--acc:var(--amber)} #s5{--acc:var(--rose)}
+
+  .story p{margin:0 0 12px; color:#d6dcff}
+  .story p:last-child{margin-bottom:0}
+  .hard{margin-top:16px; padding:14px 16px; border-radius:14px; font-size:14.6px;
+    background:rgba(251,113,133,.10); border:1px dashed rgba(251,113,133,.45); color:#ffe4e9}
+  .hard b{color:#fb7185}
+
+  .check{display:flex; gap:13px; align-items:flex-start; padding:13px 15px; margin-bottom:9px; border-radius:14px;
+    background:rgba(255,255,255,.028); border:1px solid rgba(255,255,255,.07); cursor:pointer;
+    transition:background .2s, border-color .2s, transform .12s}
+  .check:hover{background:rgba(52,211,153,.07); border-color:rgba(52,211,153,.28)}
+  .check input{position:absolute; opacity:0; width:0; height:0}
+  .box{flex:0 0 22px; width:22px; height:22px; margin-top:2px; border-radius:7px; border:2px solid rgba(255,255,255,.26);
+    display:grid; place-items:center; transition:all .2s; background:rgba(255,255,255,.03)}
+  .box::after{content:"✓"; font-size:13px; font-weight:900; color:#04150f; opacity:0; transform:scale(.5); transition:all .18s}
+  .check input:checked + .box{background:var(--emerald); border-color:var(--emerald); box-shadow:0 0 0 4px rgba(52,211,153,.16)}
+  .check input:checked + .box::after{opacity:1; transform:scale(1)}
+  .check input:checked ~ .txt{color:#8b96bd; text-decoration:line-through; text-decoration-color:rgba(52,211,153,.6)}
+  .txt{font-size:15px; color:#e4e9ff; transition:color .2s}
+  .opt .txt{color:#b9c1e4}
+  .tag{font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; color:#fbbf24; border:1px solid rgba(251,191,36,.4); padding:2px 7px; border-radius:99px; margin-left:6px}
+
+  .prompt{border-radius:16px; border:1px solid rgba(34,211,238,.20); background:rgba(34,211,238,.045); margin-bottom:13px; overflow:hidden}
+  .p-head{display:flex; align-items:center; gap:11px; padding:12px 15px; background:rgba(34,211,238,.07); border-bottom:1px solid rgba(34,211,238,.14)}
+  .p-num{font-size:17px; color:var(--cyan); font-weight:800}
+  .p-head h4{margin:0; font-size:14.5px; color:#d9fbff; font-weight:700; flex:1}
+  .copy{border:1px solid rgba(34,211,238,.4); background:rgba(34,211,238,.12); color:#a5f3fc; font:inherit;
+    font-size:12px; padding:5px 12px; border-radius:99px; cursor:pointer; transition:.2s; white-space:nowrap}
+  .copy:hover{background:rgba(34,211,238,.24); color:#fff}
+  .copy.ok{background:var(--emerald); border-color:var(--emerald); color:#04150f; font-weight:700}
+  pre.p-text{margin:0; padding:15px; font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    font-size:13.2px; line-height:1.72; color:#dbe6ff; white-space:pre-wrap; word-break:break-word}
+  .rule{margin-top:16px; padding:14px 16px; border-radius:14px; font-size:14.2px;
+    background:linear-gradient(90deg,rgba(34,211,238,.12),transparent); border-left:3px solid var(--cyan); color:#e6f9ff}
+  .rule b{color:#a5f3fc}
+
+  .next{display:grid; gap:12px; grid-template-columns:1fr 1fr}
+  @media(max-width:700px){.next{grid-template-columns:1fr}}
+  .next-card{padding:18px; border-radius:16px; background:rgba(251,191,36,.055); border:1px solid rgba(251,191,36,.26); transition:transform .2s, border-color .2s, background .2s}
+  .next-card:hover{transform:translateY(-3px); border-color:rgba(251,191,36,.55); background:rgba(251,191,36,.09)}
+  .next-card h3{margin:0 0 6px; font-size:16px; color:#fde68a}
+  .next-card p{margin:0; font-size:14.3px; color:#dfe5ff}
+
+  .terms{display:grid; gap:10px; grid-template-columns:1fr 1fr}
+  @media(max-width:700px){.terms{grid-template-columns:1fr}}
+  .term{padding:14px 16px; border-radius:14px; background:rgba(251,113,133,.055); border:1px solid rgba(251,113,133,.20)}
+  .term b{display:block; color:#fda4af; font-size:14px; margin-bottom:3px}
+  .term span{font-size:13.6px; color:#dfe5ff}
+
+  footer{margin-top:34px; text-align:center; color:#7d87ae; font-size:13px}
+  .budget{display:inline-block; margin-bottom:12px; padding:9px 18px; border-radius:99px;
+    background:rgba(59,130,246,.14); border:1px solid rgba(59,130,246,.4); color:#dbeafe; font-size:13.5px}
+
+  .toast{position:fixed; left:50%; bottom:26px; transform:translate(-50%,20px); opacity:0; pointer-events:none;
+    background:linear-gradient(90deg,var(--emerald),var(--cyan)); color:#04150f; font-weight:800; font-size:13.5px;
+    padding:11px 22px; border-radius:99px; transition:.35s cubic-bezier(.22,1,.36,1); z-index:50;
+    box-shadow:0 18px 40px -18px rgba(52,211,153,.9)}
+  .toast.on{opacity:1; transform:translate(-50%,0)}
+
+  @media print{
+    body{background:#fff; color:#111; padding:0}
+    body::before{display:none}
+    .bar,.copy,.print,.toast,.authlink{display:none}
+    section{opacity:1; transform:none; border:1px solid #ddd; background:#fff; break-inside:avoid}
+    h1{color:#111; -webkit-text-fill-color:#111}
+    .product,.submit{background:#f6f6f9; border:1px solid #ddd}
+    .product p,.submit p,.story p,.txt,.lead,.next-card p,.term span{color:#111}
+    pre.p-text{color:#111; background:#f7f7fa}
+    .kicker{color:#333; border-color:#ccc}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="kicker"><span class="dot"></span> Buổi 2 / 8 · Khoá n8n</div>
+    <h1>Hộp thư<br>vào sổ</h1>
+    <p class="tagline">Tin vào AI là chuyện của niềm tin. <b>Đếm được số dòng mới là chuyện của người làm nghề.</b></p>
+
+    <a class="authlink" href="cap-quyen.html" target="_blank">
+      🔑 Chưa cấp quyền Google? Mở trang hướng dẫn 12 bước
+    </a>
+
+    <div class="hero-grid">
+      <div class="product">
+        <span class="label">Sản phẩm cuối buổi</span>
+        <p>Một hộp thư <b>tự dọn</b>: file lên Drive theo ngày, mỗi email một dòng trong sổ, <b>chạy lại không nhân đôi</b>.</p>
+      </div>
+      <div class="submit">
+        <div class="ico">📤</div>
+        <div>
+          <span class="label">Hôm nay nộp</span>
+          <p>Workflow <strong>Active</strong> + ảnh chụp <strong>sổ 5 dòng</strong> + ảnh <strong>folder Drive</strong> có file.</p>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="bar">
+    <div class="bar-in">
+      <span id="ptxt">0 / 5 nghiệm thu</span>
+      <div class="track"><i id="pfill"></i></div>
+      <button class="print" onclick="window.print()">In</button>
+    </div>
+  </div>
+
+  <section id="s1" class="in">
+    <h2><span class="num">1</span> Đề bài</h2>
+    <div class="story">
+      <p>Hộp thư của bạn mỗi ngày 20–30 email: hoá đơn PDF, hợp đồng, ảnh chuyển khoản, và mấy cái chẳng có gì. Cuối tháng cần tìm lại một hoá đơn thì phải lục cả hộp thư, mà lục xong cũng không biết cái nào đã xử lý.</p>
+      <p>Bạn dựng: email tới → file <b>tự lên Drive</b> theo ngày → <b>1 dòng vào sổ</b> kèm đường dẫn tới file.</p>
+      <div class="hard">Một chỗ khó: phải đúng với <b>cả email có file và không có file</b> — không sót cái nào, không nhân đôi cái nào.</div>
+    </div>
+  </section>
+
+  <section id="s2">
+    <h2><span class="num">2</span> Nghiệm thu</h2>
+    <p class="lead">Năm dòng đầu là bắt buộc — tick khi nó đúng thật.</p>
+
+    <label class="check"><input type="checkbox" data-count><span class="box"></span>
+      <span class="txt">5 email → sổ có <b>5 dòng</b>, kể cả email không có file</span></label>
+
+    <label class="check"><input type="checkbox" data-count><span class="box"></span>
+      <span class="txt">Chạy lại 3 lần → vẫn <b>5 dòng</b></span></label>
+
+    <label class="check"><input type="checkbox" data-count><span class="box"></span>
+      <span class="txt">File nằm đúng folder <code>YYYY-MM-DD</code> của ngày email tới</span></label>
+
+    <label class="check"><input type="checkbox" data-count><span class="box"></span>
+      <span class="txt">File <b>12MB</b> vẫn lên Drive, workflow không chết</span></label>
+
+    <label class="check"><input type="checkbox" data-count><span class="box"></span>
+      <span class="txt">Email từ địa chỉ chỉ định → có <b>1 tin Telegram</b></span></label>
+
+    <label class="check opt"><input type="checkbox"><span class="box"></span>
+      <span class="txt">Nêu được một việc khác trong công việc cần đúng khuôn "file về đâu, dòng về đâu" này <span class="tag">tuỳ chọn</span></span></label>
+  </section>
+
+  <section id="s3">
+    <h2><span class="num">3</span> Nhờ AI đúng cách</h2>
+    <p class="lead">Dán vào AI theo đúng thứ tự. Câu <b>⓪ làm trước tiên</b> — chưa kiểm tra kết nối thì mọi câu sau đều vô nghĩa.</p>
+
+    <div class="prompt">
+      <div class="p-head"><span class="p-num">⓪</span><h4>Kiểm tra n8n MCP</h4><button class="copy" data-copy>Copy</button></div>
+      <pre class="p-text">Kiểm tra kết nối n8n MCP giúp tôi: gọi công cụ health check, cho tôi biết đang trỏ tới instance nào, phiên bản n8n, và liệt kê 3 workflow gần nhất.</pre>
+    </div>
+
+    <div class="prompt">
+      <div class="p-head"><span class="p-num">①</span><h4>Muốn tạo workflow</h4><button class="copy" data-copy>Copy</button></div>
+      <pre class="p-text">Tôi muốn tạo một workflow: mỗi khi Gmail có email mới thì lưu file đính kèm lên Google Drive theo folder ngày (YYYY-MM-DD), và ghi 1 dòng vào Google Sheets gồm: ngày, người gửi, tiêu đề, tên file, link file. Email không có file thì vẫn ghi 1 dòng. Email đã ghi rồi thì không ghi lại.
+
+Input: email Gmail (có hoặc không có file đính kèm)
+Output: file trên Drive + 1 dòng trong Sheets
+
+Workflow tối đa 8 node, nói rõ mỗi node làm gì.</pre>
+    </div>
+
+    <div class="prompt">
+      <div class="p-head"><span class="p-num">②</span><h4>Nó chạy sai</h4><button class="copy" data-copy>Copy</button></div>
+      <pre class="p-text">Node đang sai: "Ghi vào sổ"
+
+Input mẫu: cùng một email {messageId: "abc123"} nhưng chạy 3 lần
+Output hiện tại: sổ có 3 dòng giống nhau
+Output tôi muốn: lần 2 và lần 3 không thêm dòng nào
+
+Chỉ sửa node này, đừng thêm node khác.</pre>
+    </div>
+
+    <div class="prompt">
+      <div class="p-head"><span class="p-num">③</span><h4>AI sửa mà vẫn sai, hoặc sửa xong bạn không hiểu</h4><button class="copy" data-copy>Copy</button></div>
+      <pre class="p-text">Đây là workflow của tôi: [dán nội dung workflow]
+
+Giải thích lại trong 5 câu, và chỉ ra chỗ nào có thể làm mất hoặc nhân đôi dữ liệu khi chạy lại.</pre>
+    </div>
+
+    <div class="rule"><b>Luật:</b> dán <b>error nguyên văn</b> + <b>input/output mẫu</b>, đừng chụp màn hình mờ. Và đừng cho AI viết lại cả workflow khi chỉ 1 node sai.</div>
+  </section>
+
+  <section id="s4">
+    <h2><span class="num">4</span> Làm tiếp</h2>
+    <p class="lead">Xong bài chính thì làm hai workflow sau — cùng kỹ năng, chỉ đổi nội dung.</p>
+
+    <div class="next">
+      <div class="next-card">
+        <h3>Báo cáo tuần</h3>
+        <p>Chủ nhật 20:00, hệ thống đếm: tuần này nhận bao nhiêu email, bao nhiêu cái có file, ai gửi nhiều nhất — gửi bạn một tin, không phải mở Sheets.</p>
+      </div>
+      <div class="next-card">
+        <h3>Trang tra cứu hoá đơn</h3>
+        <p>Mở một đường link là ra bảng: ngày, người gửi, tên file, và link bấm tải được. Không phải vào Drive lục từng folder.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="s5">
+    <h2><span class="num">5</span> Thuật ngữ</h2>
+
+    <div class="terms">
+      <div class="term"><b>Credential</b><span>Chìa khoá để n8n được phép vào Google thay bạn.</span></div>
+      <div class="term"><b>Scope</b><span>Phạm vi quyền: được đọc thư, nhưng không được xoá thư.</span></div>
+      <div class="term"><b>Binary</b><span>Phần "file" của dữ liệu — không phải chữ, nên không đọc bằng mắt được.</span></div>
+      <div class="term"><b>Polling</b><span>Trigger tự hỏi lại mỗi phút, thay vì được báo ngay khi có thư.</span></div>
+      <div class="term"><b>Quota</b><span>Giới hạn số lần gọi Google mỗi ngày. Vượt là lỗi 429.</span></div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="budget">✦ Chúc bạn sớm có một sổ mà không ai phải mở Excel để cập nhật nữa.</div>
+    <div>Buổi 2 / 8 · Hộp thư vào sổ</div>
+  </footer>
+</div>
+
+<div class="toast" id="toast">Đủ nghiệm thu 🎉</div>
+
+<script>
+  var boxes = Array.prototype.slice.call(document.querySelectorAll('[data-count]'));
+  var key = 's2-nghiem-thu';
+  var fill = document.getElementById('pfill');
+  var ptxt = document.getElementById('ptxt');
+  var toast = document.getElementById('toast');
+  var wasFull = false;
+
+  try {
+    var saved = JSON.parse(localStorage.getItem(key) || '[]');
+    saved.forEach(function (v, i) { if (v && boxes[i]) boxes[i].checked = true; });
+  } catch (e) {}
+
+  function update() {
+    var done = boxes.filter(function (b) { return b.checked; }).length;
+    var pct = boxes.length ? Math.round(done / boxes.length * 100) : 0;
+    fill.style.width = pct + '%';
+    ptxt.textContent = done + ' / ' + boxes.length + ' nghiệm thu';
+    var full = done === boxes.length && boxes.length > 0;
+    if (full && !wasFull) {
+      toast.classList.add('on');
+      setTimeout(function () { toast.classList.remove('on'); }, 2600);
+    }
+    wasFull = full;
+    try { localStorage.setItem(key, JSON.stringify(boxes.map(function (b) { return b.checked; }))); } catch (e) {}
+  }
+  boxes.forEach(function (b) { b.addEventListener('change', update); });
+  update();
+
+  function fallbackCopy(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); } catch (e) {}
+    document.body.removeChild(ta);
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('[data-copy]'), function (btn) {
+    btn.addEventListener('click', function () {
+      var text = btn.closest('.prompt').querySelector('.p-text').innerText;
+      var ok = function () {
+        btn.textContent = 'Đã copy ✓'; btn.classList.add('ok');
+        setTimeout(function () { btn.textContent = 'Copy'; btn.classList.remove('ok'); }, 1700);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(ok).catch(function () { fallbackCopy(text); ok(); });
+      } else { fallbackCopy(text); ok(); }
+    });
+  });
+
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); }
+      });
+    }, { threshold: 0.12 });
+    Array.prototype.forEach.call(document.querySelectorAll('section'), function (s) { io.observe(s); });
+  } else {
+    Array.prototype.forEach.call(document.querySelectorAll('section'), function (s) { s.classList.add('in'); });
+  }
+</script>
+</body>
+</html>
