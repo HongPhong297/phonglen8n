@@ -1,0 +1,441 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Buổi 3 — Nhà riêng</title>
+<style>
+  :root{
+    --bg:#0a0a0f; --ink:#e9edff; --muted:#9aa3c7;
+    --violet:#8b5cf6; --cyan:#22d3ee; --emerald:#34d399; --amber:#fbbf24; --rose:#fb7185;
+    --card:rgba(255,255,255,.045); --line:rgba(255,255,255,.10);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; background:var(--bg); color:var(--ink); padding:0 18px 90px;
+    font-family:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+    line-height:1.62; -webkit-font-smoothing:antialiased;
+  }
+  body::before{
+    content:""; position:fixed; inset:0; z-index:0; pointer-events:none;
+    background:
+      radial-gradient(880px 600px at 8% -12%, rgba(251,191,36,.20), transparent 62%),
+      radial-gradient(820px 520px at 96% -6%, rgba(139,92,246,.22), transparent 60%),
+      radial-gradient(760px 620px at 50% 112%, rgba(34,211,238,.10), transparent 62%);
+  }
+  .wrap{max-width:960px; margin:0 auto; position:relative; z-index:1}
+
+  header{padding:46px 0 10px}
+  .kicker{display:inline-flex; align-items:center; gap:9px; font-size:12.5px; letter-spacing:.16em;
+    text-transform:uppercase; color:#ffe6b3; padding:7px 14px; border-radius:999px;
+    border:1px solid rgba(251,191,36,.45); background:linear-gradient(90deg,rgba(251,191,36,.18),rgba(139,92,246,.14))}
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--amber);box-shadow:0 0 0 4px rgba(251,191,36,.16);animation:pulse 2.4s infinite}
+  @keyframes pulse{50%{box-shadow:0 0 0 8px rgba(251,191,36,0)}}
+  h1{font-size:clamp(34px,6vw,58px); line-height:1.04; letter-spacing:-.03em; margin:18px 0 12px;
+    background:linear-gradient(100deg,#fff 6%,#fde68a 40%,#c4b5fd 78%,#fff 100%);
+    -webkit-background-clip:text; background-clip:text; color:transparent}
+  .tagline{max-width:680px; margin:0 0 24px; font-size:16px; line-height:1.65; color:#c9cfe8}
+  .tagline b{color:#fde68a; font-weight:700}
+
+  .hero-grid{display:grid; gap:14px; grid-template-columns:1.5fr 1fr}
+  @media(max-width:760px){.hero-grid{grid-template-columns:1fr}}
+  .product{position:relative; border-radius:20px; padding:22px 24px; overflow:hidden;
+    background:linear-gradient(135deg,rgba(251,191,36,.16),rgba(139,92,246,.12) 60%,rgba(255,255,255,.03));
+    border:1px solid rgba(251,191,36,.38);
+    box-shadow:0 22px 60px -30px rgba(251,191,36,.7), inset 0 1px 0 rgba(255,255,255,.10)}
+  .product::after{content:""; position:absolute; inset:-40% -30% auto auto; width:260px; height:260px; border-radius:50%;
+    background:radial-gradient(circle,rgba(139,92,246,.38),transparent 65%); filter:blur(12px)}
+  .label{font-size:11.5px; letter-spacing:.18em; text-transform:uppercase; color:#e6d7a8; margin-bottom:8px; display:block}
+  .product p{margin:0; font-size:clamp(17px,2.3vw,20px); font-weight:600; color:#fff; position:relative; z-index:1}
+  .product b{color:#fde68a; font-weight:800}
+  .submit{border-radius:20px; padding:20px; display:flex; gap:13px; align-items:flex-start;
+    background:linear-gradient(150deg,rgba(139,92,246,.18),rgba(139,92,246,.05));
+    border:1px solid rgba(167,139,250,.42); box-shadow:0 20px 50px -34px rgba(139,92,246,.9)}
+  .submit .ico{font-size:22px; line-height:1.1}
+  .submit .label{color:#ddd6fe}
+  .submit p{margin:0; font-size:14.5px; color:#efeaff}
+  .submit strong{color:#c4b5fd}
+
+  .bar{position:sticky; top:0; z-index:20; margin:26px 0 4px; padding:11px 0;
+    background:linear-gradient(180deg,rgba(10,10,15,.94),rgba(10,10,15,.72));
+    backdrop-filter:blur(14px); border-bottom:1px solid rgba(255,255,255,.06)}
+  .bar-in{display:flex; align-items:center; gap:14px; max-width:960px; margin:0 auto; padding:0 2px}
+  .bar span{font-size:12.5px; color:var(--muted); white-space:nowrap; font-variant-numeric:tabular-nums}
+  .track{flex:1; height:6px; border-radius:99px; background:rgba(255,255,255,.09); overflow:hidden}
+  .track i{display:block; height:100%; width:0; border-radius:99px; transition:width .45s cubic-bezier(.22,1,.36,1);
+    background:linear-gradient(90deg,var(--amber),var(--emerald))}
+  .print{border:1px solid var(--line); background:rgba(255,255,255,.05); color:var(--muted); font:inherit; font-size:12px; padding:6px 12px; border-radius:99px; cursor:pointer}
+  .print:hover{color:#fff; border-color:rgba(255,255,255,.3)}
+
+  /* bước */
+  .step{position:relative; margin:18px 0; padding:24px 24px 22px 24px; border-radius:20px;
+    background:var(--card); border:1px solid var(--line);
+    opacity:0; transform:translateY(14px); transition:opacity .5s, transform .5s cubic-bezier(.22,1,.36,1)}
+  .step.in{opacity:1; transform:none}
+  .step.done{border-color:rgba(52,211,153,.45); background:rgba(52,211,153,.055)}
+  .step::before{content:""; position:absolute; left:0; top:22px; bottom:22px; width:3px; border-radius:99px; background:var(--amber)}
+  .step.done::before{background:var(--emerald)}
+  .s-head{display:flex; align-items:flex-start; gap:14px; margin-bottom:10px}
+  .s-num{flex:0 0 38px; width:38px; height:38px; border-radius:12px; display:grid; place-items:center;
+    font-weight:800; font-size:15px; color:#1a1206; background:linear-gradient(135deg,#fde68a,#fbbf24);
+    box-shadow:0 10px 24px -12px rgba(251,191,36,.9)}
+  .step.done .s-num{background:linear-gradient(135deg,#86efac,#34d399); color:#04150f}
+  .s-title{margin:0; font-size:19px; letter-spacing:-.01em}
+  .s-sub{margin:2px 0 0; font-size:13px; color:#9aa3c7}
+  .body{font-size:14.9px; color:#d8ddf5}
+  .body p{margin:0 0 10px}
+  .body ul{margin:6px 0 10px; padding-left:20px}
+  .body li{margin-bottom:5px}
+  .body code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:12.8px;
+    background:rgba(139,92,246,.16); color:#c4b5fd; padding:2px 6px; border-radius:6px}
+  .ok{margin-top:12px; padding:11px 14px; border-radius:12px; font-size:14px;
+    background:rgba(52,211,153,.09); border:1px solid rgba(52,211,153,.28); color:#d1fae5}
+  .ok b{color:#6ee7b7}
+  .warnbox{margin:20px 0; padding:16px 18px; border-radius:16px; display:flex; gap:12px; font-size:14.4px;
+    background:rgba(251,113,133,.10); border:1px solid rgba(251,113,133,.42); color:#ffe4e9}
+  .warnbox .i{font-size:19px; line-height:1.15}
+  .warnbox b{color:#fff}
+
+  .tick{display:inline-flex; align-items:center; gap:9px; margin-top:14px; cursor:pointer; user-select:none;
+    font-size:13.5px; color:#b9c1e4}
+  .tick input{position:absolute; opacity:0; width:0; height:0}
+  .tbox{width:20px; height:20px; border-radius:6px; border:2px solid rgba(255,255,255,.28);
+    display:grid; place-items:center; transition:.2s; background:rgba(255,255,255,.03)}
+  .tbox::after{content:"✓"; font-size:12px; font-weight:900; color:#04150f; opacity:0; transition:.18s}
+  .tick input:checked + .tbox{background:var(--emerald); border-color:var(--emerald)}
+  .tick input:checked + .tbox::after{opacity:1}
+  .tick input:checked ~ span{color:#6ee7b7}
+
+  .note{margin-top:14px; padding:11px 14px; border-radius:12px; font-size:13.6px;
+    background:rgba(251,191,36,.08); border:1px dashed rgba(251,191,36,.35); color:#ffe9b8}
+  .note b{color:#fbbf24}
+
+  .prompt{margin-top:14px; border-radius:14px; border:1px solid rgba(34,211,238,.20); background:rgba(34,211,238,.045); overflow:hidden}
+  .p-head{display:flex; align-items:center; gap:11px; padding:11px 14px; background:rgba(34,211,238,.07); border-bottom:1px solid rgba(34,211,238,.14)}
+  .p-num{font-size:16px; color:var(--cyan); font-weight:800}
+  .p-head h4{margin:0; font-size:13.8px; color:#d9fbff; font-weight:700; flex:1}
+  .copy{border:1px solid rgba(34,211,238,.4); background:rgba(34,211,238,.12); color:#a5f3fc; font:inherit;
+    font-size:11.5px; padding:4px 11px; border-radius:99px; cursor:pointer; transition:.2s; white-space:nowrap}
+  .copy:hover{background:rgba(34,211,238,.24); color:#fff}
+  .copy.ok{background:var(--emerald); border-color:var(--emerald); color:#04150f; font-weight:700}
+  pre.p-text{margin:0; padding:14px; font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    font-size:12.8px; line-height:1.7; color:#dbe6ff; white-space:pre-wrap; word-break:break-word}
+
+  /* bảng lỗi */
+  section{margin:26px 0; padding:26px; border-radius:22px; background:var(--card); border:1px solid var(--line)}
+  section h2{display:flex; align-items:center; gap:12px; font-size:12.5px; letter-spacing:.16em;
+    text-transform:uppercase; margin:0 0 16px; color:#cdd5ff}
+  .num{display:grid; place-items:center; width:30px; height:30px; border-radius:10px; font-size:14px; font-weight:800;
+    color:#080b16; background:var(--rose); letter-spacing:0}
+  table{width:100%; border-collapse:collapse; font-size:14px}
+  th{text-align:left; font-size:11.5px; letter-spacing:.12em; text-transform:uppercase; color:#93a0c4;
+    padding:9px 12px; border-bottom:1px solid rgba(255,255,255,.10)}
+  td{padding:11px 12px; border-bottom:1px solid rgba(255,255,255,.055); vertical-align:top; color:#dfe5ff}
+  tr:last-child td{border-bottom:0}
+  td.bad{color:#fda4af; font-family:ui-monospace,Menlo,Consolas,monospace; font-size:12.8px; white-space:nowrap}
+
+  footer{margin-top:34px; text-align:center; color:#7d87ae; font-size:13px}
+  .budget{display:inline-block; margin-bottom:12px; padding:9px 18px; border-radius:99px;
+    background:rgba(251,191,36,.12); border:1px solid rgba(251,191,36,.35); color:#ffe9b8; font-size:13.5px}
+
+  .toast{position:fixed; left:50%; bottom:26px; transform:translate(-50%,20px); opacity:0; pointer-events:none;
+    background:linear-gradient(90deg,var(--emerald),var(--cyan)); color:#04150f; font-weight:800; font-size:13.5px;
+    padding:11px 22px; border-radius:99px; transition:.35s cubic-bezier(.22,1,.36,1); z-index:50;
+    box-shadow:0 18px 40px -18px rgba(52,211,153,.9)}
+  .toast.on{opacity:1; transform:translate(-50%,0)}
+
+  @media print{
+    body{background:#fff; color:#111; padding:0}
+    body::before{display:none}
+    .bar,.print,.toast{display:none}
+    .step,section{opacity:1; transform:none; background:#fff; border:1px solid #ddd; break-inside:avoid}
+    h1{color:#111; -webkit-text-fill-color:#111}
+    .product,.submit{background:#f7f7fa; border:1px solid #ddd}
+    .product p,.submit p,.body,.s-title,.ok,.warnbox{color:#111}
+    td,th{color:#111}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="kicker"><span class="dot"></span> Buổi 3 / 8 · Khoá n8n</div>
+    <h1>Nhà riêng</h1>
+    <p class="tagline">Sổ và workflow của bạn đang nằm nhờ ở instance của trung tâm. Hôm nay chúng <b>dọn sang nhà bạn</b> — và không ai lấy lại được.</p>
+
+    <div class="hero-grid">
+      <div class="product">
+        <span class="label">Sản phẩm cuối buổi</span>
+        <p>Một <b>instance riêng</b> chạy trên tên miền của bạn, mở bằng HTTPS, có sổ và workflow của chính bạn bên trong.</p>
+      </div>
+      <div class="submit">
+        <div class="ico">🔑</div>
+        <div>
+          <span class="label">Hôm nay nộp</span>
+          <p>Link instance của bạn + ảnh chụp <strong>workflow S2 chạy lại</strong> trên instance đó.</p>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="bar">
+    <div class="bar-in">
+      <span id="ptxt">0 / 7 bước</span>
+      <div class="track"><i id="pfill"></i></div>
+      <button class="print" onclick="window.print()">In</button>
+    </div>
+  </div>
+
+  <div class="warnbox">
+    <span class="i">🧨</span>
+    <div><b>Đọc trước khi trả tiền:</b> đừng mua gói 12 tháng hôm nay. Tino có <b>7 ngày dùng thử</b> và hoàn tiền 30 ngày — cứ dựng xong, chạy được, rồi mới quyết. Và đừng chọn gói rẻ nhất nếu bạn định chạy AI nhiều.</div>
+  </div>
+
+  <!-- 1 -->
+  <div class="step">
+    <div class="s-head">
+      <div class="s-num">1</div>
+      <div>
+        <h3 class="s-title">Mua một con VPS N8N</h3>
+        <p class="s-sub">tino.vn/vps-n8n · từ 179.000đ/tháng · kích hoạt ~5 phút</p>
+      </div>
+    </div>
+    <div class="body">
+      <p>Bên đó bán VPS <b>cài sẵn n8n</b> trên Docker, kèm tên miền miễn phí. Bạn không phải cài gì, không đụng dòng lệnh nào — chỉ chọn gói, thanh toán, rồi đợi email.</p>
+      <ul>
+        <li>Vào trang, chọn gói đầu tiên (đủ cho 1 người, vài workflow).</li>
+        <li>Dùng mã/khuyến mãi nếu đang có — sinh viên hay được giảm thêm.</li>
+        <li>Ghi chú lại ngày hết hạn dùng thử vào điện thoại.</li>
+      </ul>
+    </div>
+    <div class="ok"><b>Xong khi:</b> trong hộp thư có email chứa IP, tài khoản, mật khẩu và đường link vào n8n.</div>
+    <label class="tick"><input type="checkbox" data-count><span class="tbox"></span><span>Đã có email thông tin đăng nhập</span></label>
+  </div>
+
+  <!-- 2 -->
+  <div class="step">
+    <div class="s-head">
+      <div class="s-num">2</div>
+      <div>
+        <h3 class="s-title">Vào lần đầu — và giành quyền chủ</h3>
+        <p class="s-sub">ai mở link trước, người đó thành chủ</p>
+      </div>
+    </div>
+    <div class="body">
+      <p>Mở link n8n trong email. Nếu thấy màn hình <b>Set up owner account</b>, đó là của bạn — điền email và mật khẩu mạnh, rồi bật 2FA ngay trong Settings.</p>
+      <p>Nếu mở vào thẳng giao diện có sẵn workflow lạ, nghĩa là bên bán đã tạo chủ trước. Đổi mật khẩu, đổi email về bạn, và hỏi họ qua ticket.</p>
+    </div>
+    <div class="ok"><b>Xong khi:</b> bạn đăng nhập được bằng email của mình, và Settings có 2FA đang bật.</div>
+    <label class="tick"><input type="checkbox" data-count><span class="tbox"></span><span>Tôi là chủ instance, 2FA đã bật</span></label>
+  </div>
+
+  <!-- 3 -->
+  <div class="step">
+    <div class="s-head">
+      <div class="s-num">3</div>
+      <div>
+        <h3 class="s-title">Trỏ tên miền về nhà</h3>
+        <p class="s-sub">A record → IP của VPS</p>
+      </div>
+    </div>
+    <div class="body">
+      <p>Dùng tên miền miễn phí Tino cấp, hoặc tên miền bạn đã mua. Trong phần quản lý DNS, tạo bản ghi <code>A</code> trỏ về IP con VPS.</p>
+      <ul>
+        <li><code>n8n.tenban.com</code> → IP của VPS</li>
+        <li>Lưu lại, rồi chờ. Thường 5–30 phút, có khi vài tiếng.</li>
+        <li>Trong lúc chờ, đừng sửa gì khác — và đừng kết luận "hỏng".</li>
+      </ul>
+    </div>
+    <div class="ok"><b>Xong khi:</b> gõ tên miền vào trình duyệt, nó dẫn tới đúng con VPS đó (dù có thể còn báo lỗi bảo mật).</div>
+    <label class="tick"><input type="checkbox" data-count><span class="tbox"></span><span>Tên miền đã trỏ về đúng IP</span></label>
+  </div>
+
+  <!-- 4 -->
+  <div class="step">
+    <div class="s-head">
+      <div class="s-num">4</div>
+      <div>
+        <h3 class="s-title">Kiểm tra cửa trước</h3>
+        <p class="s-sub">HTTPS + /healthz</p>
+      </div>
+    </div>
+    <div class="body">
+      <p>Mở <code>https://n8n.tenban.com</code> — phải có ổ khoá. Rồi mở thêm <code>/healthz</code>, phải trả về <code>{"status":"ok"}</code>. Hai cái này tách biệt: cái đầu là chứng chỉ, cái sau là n8n còn sống.</p>
+      <p>Nếu chứng chỉ chưa có, gần như luôn là do bước 3 chưa xong — không phải n8n hỏng.</p>
+    </div>
+    <div class="ok"><b>Xong khi:</b> ổ khoá xanh và <code>{"status":"ok"}</code> cùng đúng.</div>
+    <label class="tick"><input type="checkbox" data-count><span class="tbox"></span><span>HTTPS chạy, /healthz trả ok</span></label>
+  </div>
+
+  <!-- 5 -->
+  <div class="step">
+    <div class="s-head">
+      <div class="s-num">5</div>
+      <div>
+        <h3 class="s-title">Chuyển nhà: workflow, sổ, và chìa khoá</h3>
+        <p class="s-sub">thứ duy nhất không đi theo là credential — và đó là bài học</p>
+      </div>
+    </div>
+    <div class="body">
+      <p>Xuất 2 workflow ở buổi 1 và 2, nhập sang instance mới. Rồi làm 3 việc mà máy không làm hộ:</p>
+      <ul>
+        <li><b>Tạo lại sổ:</b> Data Table không đi theo file workflow.</li>
+        <li><b>Nhập lại credential:</b> Telegram, rồi Gmail/Drive/Sheets — vì chìa khoá được mã hoá bằng key của từng máy.</li>
+        <li><b>Thêm redirect URI thứ hai</b> vào Google Cloud: <code>https://n8n.tenban.com/rest/oauth2-credential/callback</code>. Thiếu dòng này là Google chặn ngay.</li>
+      </ul>
+      <p>Xong ba việc đó thì bấm chạy lại workflow buổi 2 — nó phải ra đúng 5 dòng như cũ.</p>
+    </div>
+    <div class="ok"><b>Xong khi:</b> workflow S2 chạy trên instance mới, sổ có đúng 5 dòng, và bạn giải thích được vì sao phải nhập lại credential.</div>
+    <label class="tick"><input type="checkbox" data-count><span class="tbox"></span><span>Workflow chạy lại được ở nhà mới</span></label>
+  </div>
+
+  <!-- 6 -->
+  <div class="step">
+    <div class="s-head">
+      <div class="s-num">6</div>
+      <div>
+        <h3 class="s-title">Sao lưu workflow mỗi đêm lên Drive</h3>
+        <p class="s-sub">3:00 · bản sao nằm ngoài máy chủ</p>
+      </div>
+    </div>
+    <div class="body">
+      <p>Một workflow nhỏ: 3 giờ sáng, gọi API của instance để lấy toàn bộ workflow, đóng gói thành JSON, đẩy lên Google Drive vào thư mục <code>backup/YYYY-MM</code>.</p>
+      <p>Vì sao phải làm: bản sao nằm trên cùng cái máy có thể chết thì không phải bản sao. Và đây cũng là lần đầu bạn dùng <b>API của chính mình</b>.</p>
+
+      <div class="note">Trước khi chạy: vào <b>Settings → n8n API → Create an API key</b>, rồi dán key đó vào header <code>X-N8N-API-KEY</code>.</div>
+
+      <div class="prompt">
+        <div class="p-head"><span class="p-num">①</span><h4>Prompt mẫu</h4><button class="copy" data-copy>Copy</button></div>
+        <pre class="p-text">Tôi muốn tạo một workflow: 3 giờ sáng mỗi ngày, lấy toàn bộ workflow trên instance n8n của tôi qua API, đóng gói thành file JSON, và upload lên Google Drive vào thư mục backup/YYYY-MM.
+
+Input: không cần, chạy theo lịch
+Output: 1 file JSON mỗi ngày, tên kiểu n8n-backup-YYYY-MM-DD.json
+
+Dùng API của chính instance: base URL https://n8n.tenban.com, header X-N8N-API-KEY lấy từ credential.
+Workflow tối đa 6 node, nói rõ mỗi node làm gì.</pre>
+      </div>
+
+      <div class="note">Nếu AI trả về 0 workflow: nó đang gọi sai endpoint hoặc thiếu header. Dán lại URL đầy đủ và tên header, đừng mô tả bằng lời.</div>
+    </div>
+    <div class="ok"><b>Xong khi:</b> sáng hôm sau mở Drive thấy file, mở ra thấy tên các workflow của bạn.</div>
+    <label class="tick"><input type="checkbox" data-count><span class="tbox"></span><span>Có bản sao lưu nằm ngoài máy chủ</span></label>
+  </div>
+
+  <!-- 7 -->
+  <div class="step">
+    <div class="s-head">
+      <div class="s-num">7</div>
+      <div>
+        <h3 class="s-title">Một cánh cửa có khoá cho hệ thống khác</h3>
+        <p class="s-sub">webhook + ?key=</p>
+      </div>
+    </div>
+    <div class="body">
+      <p>Nhà bạn giờ nằm trên internet. Mọi webhook đều là cửa mở — nên cửa phải có khoá. Dựng một webhook trả dữ liệu từ sổ, nhưng chỉ trả khi có <code>?key=...</code> đúng; sai thì trả <b>401</b>.</p>
+      <p>Đây là bài học bảo mật đầu tiên mà ai self-host cũng bỏ qua: <b>đường dẫn khó đoán không phải là mật khẩu</b>.</p>
+
+      <div class="prompt">
+        <div class="p-head"><span class="p-num">①</span><h4>Prompt mẫu</h4><button class="copy" data-copy>Copy</button></div>
+        <pre class="p-text">Tôi muốn tạo một workflow: một webhook GET nhận tham số ?key=... Nếu key sai hoặc thiếu thì trả HTTP 401 với body {"error":"unauthorized"}. Nếu đúng thì đọc Google Sheets và trả JSON gồm 10 dòng mới nhất: ngày, người gửi, tên file, link file.
+
+Input: GET /webhook/hoa-don?key=abc123
+Output: 200 + JSON, hoặc 401
+
+Dùng node Respond to Webhook để trả lời. Workflow tối đa 5 node, nói rõ mỗi node làm gì.</pre>
+      </div>
+
+      <div class="note">Nhớ bật workflow thành <b>Active</b> rồi mới dùng URL production — URL test chỉ chạy khi bạn bấm Execute.</div>
+    </div>
+    <div class="ok"><b>Xong khi:</b> gọi đúng key thì ra dữ liệu, sai key thì 401 — và bạn không dán key vào chat lớp.</div>
+    <label class="tick"><input type="checkbox" data-count><span class="tbox"></span><span>Webhook đã có khoá</span></label>
+  </div>
+
+  <div class="warnbox">
+    <span class="i">🗝️</span>
+    <div><b>Một câu hỏi nên gửi ticket cho Tino hôm nay:</b> "Encryption key của n8n nằm ở đâu, và nếu em muốn backup toàn bộ instance thì lấy file nào?" Không có key đó, mọi credential đều không giải mã được — kể cả khi bạn có bản sao lưu. Hỏi trước rẻ hơn hỏng sau.</div>
+  </div>
+
+  <section>
+    <h2><span class="num">!</span> Khi nó không chạy</h2>
+    <table>
+      <tr><th>Bạn thấy</th><th>Thường là</th></tr>
+      <tr><td class="bad">trang trắng / không kết nối</td><td>DNS chưa lan, hoặc tên miền trỏ sai IP. Kiểm tra lại bản ghi A.</td></tr>
+      <tr><td class="bad">"Not secure" / cert lỗi</td><td>Bước 3 chưa xong. Chờ, rồi tải lại. Đừng bấm "tiếp tục truy cập" để dạy người khác làm theo.</td></tr>
+      <tr><td class="bad">redirect_uri_mismatch</td><td>Chưa thêm redirect URI của tên miền mới vào Google Cloud (bước 5).</td></tr>
+      <tr><td class="bad">credential "could not be decrypted"</td><td>Instance đổi encryption key. Nhập lại credential, và đừng đổi key nữa.</td></tr>
+      <tr><td class="bad">502 / 503</td><td>Container n8n chưa lên sau khi khởi động lại. Chờ 1–2 phút rồi tải lại.</td></tr>
+      <tr><td class="bad">workflow chạy nhưng không gửi Telegram</td><td>Credential cũ còn trỏ về instance cũ, hoặc token đã bị thu hồi.</td></tr>
+    </table>
+  </section>
+
+  <footer>
+    <div class="budget">✦ Chúc bạn có một căn nhà nhỏ mà mình giữ chìa — và không phải xin phép ai để bật một workflow.</div>
+    <div>Buổi 3 / 8 · Nhà riêng</div>
+  </footer>
+
+  <div class="toast" id="toast">Xong cả 7 bước 🎉</div>
+</div>
+
+<script>
+  var boxes = Array.prototype.slice.call(document.querySelectorAll('[data-count]'));
+  var key = 's3-nha-rieng';
+  var fill = document.getElementById('pfill');
+  var ptxt = document.getElementById('ptxt');
+  var toast = document.getElementById('toast');
+  var wasFull = false;
+
+  try {
+    var saved = JSON.parse(localStorage.getItem(key) || '[]');
+    saved.forEach(function (v, i) { if (v && boxes[i]) boxes[i].checked = true; });
+  } catch (e) {}
+
+  function update() {
+    var done = boxes.filter(function (b) { return b.checked; }).length;
+    fill.style.width = (boxes.length ? Math.round(done / boxes.length * 100) : 0) + '%';
+    ptxt.textContent = done + ' / ' + boxes.length + ' bước';
+    boxes.forEach(function (b) { b.closest('.step').classList.toggle('done', b.checked); });
+    var full = done === boxes.length && boxes.length > 0;
+    if (full && !wasFull) {
+      toast.classList.add('on');
+      setTimeout(function () { toast.classList.remove('on'); }, 2800);
+    }
+    wasFull = full;
+    try { localStorage.setItem(key, JSON.stringify(boxes.map(function (b) { return b.checked; }))); } catch (e) {}
+  }
+  boxes.forEach(function (b) { b.addEventListener('change', update); });
+  update();
+
+  function fallbackCopy(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); } catch (e) {}
+    document.body.removeChild(ta);
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('[data-copy]'), function (btn) {
+    btn.addEventListener('click', function () {
+      var text = btn.closest('.prompt').querySelector('.p-text').innerText;
+      var ok = function () {
+        btn.textContent = 'Đã copy ✓'; btn.classList.add('ok');
+        setTimeout(function () { btn.textContent = 'Copy'; btn.classList.remove('ok'); }, 1700);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(ok).catch(function () { fallbackCopy(text); ok(); });
+      } else { fallbackCopy(text); ok(); }
+    });
+  });
+
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { threshold: 0.1 });
+    Array.prototype.forEach.call(document.querySelectorAll('.step'), function (s) { io.observe(s); });
+  } else {
+    Array.prototype.forEach.call(document.querySelectorAll('.step'), function (s) { s.classList.add('in'); });
+  }
+</script>
+</body>
+</html>

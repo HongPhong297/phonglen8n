@@ -27,7 +27,7 @@
     background:linear-gradient(100deg,#fff,#93c5fd 55%,#67e8f9);
     -webkit-background-clip:text; background-clip:text; color:transparent}
   .sub{color:#c2ccef; max-width:640px; margin:0 0 34px; font-size:15.5px}
-  .grid{display:grid; gap:14px; grid-template-columns:1fr 1fr}
+  .grid{display:grid; gap:14px; grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
   @media(max-width:720px){.grid{grid-template-columns:1fr}}
   a.card{
     display:block; text-decoration:none; color:inherit; padding:22px 22px 20px; border-radius:20px;
@@ -60,6 +60,12 @@
       <span class="tag">Buổi 2</span>
       <h2>Hộp thư vào sổ <span class="arrow">→</span></h2>
       <p>Email tới → file lên Drive theo ngày → một dòng vào Google Sheets, chạy lại không nhân đôi.</p>
+    </a>
+
+    <a class="card" href="s3/">
+      <span class="tag">Buổi 3</span>
+      <h2>Nhà riêng <span class="arrow">→</span></h2>
+      <p>Dựng instance n8n của chính bạn trên VPS, trỏ tên miền, chuyển nhà workflow — 7 bước có tick tiến độ.</p>
     </a>
 
     <a class="card wide" href="s2/cap-quyen.html">
