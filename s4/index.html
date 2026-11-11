@@ -1,0 +1,405 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Buổi 4 — Trợ lý đơn hàng</title>
+<style>
+  :root{
+    --bg:#0d0710; --ink:#f2e9f0; --muted:#b39ab3;
+    --rose:#fb7185; --pink:#f472b6; --amber:#fbbf24; --emerald:#34d399; --cyan:#22d3ee; --violet:#a78bfa;
+    --card:rgba(255,255,255,.045); --line:rgba(255,255,255,.10);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; background:var(--bg); color:var(--ink); padding:0 18px 90px;
+    font-family:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+    line-height:1.62; -webkit-font-smoothing:antialiased;
+  }
+  body::before{
+    content:""; position:fixed; inset:0; z-index:0; pointer-events:none;
+    background:
+      radial-gradient(900px 620px at 8% -12%, rgba(244,114,182,.22), transparent 62%),
+      radial-gradient(820px 520px at 96% -4%, rgba(251,113,133,.18), transparent 60%),
+      radial-gradient(760px 620px at 50% 112%, rgba(167,139,250,.14), transparent 62%);
+  }
+  .wrap{max-width:960px; margin:0 auto; position:relative; z-index:1}
+
+  header{padding:46px 0 10px}
+  .kicker{display:inline-flex; align-items:center; gap:9px; font-size:12.5px; letter-spacing:.16em;
+    text-transform:uppercase; color:#ffd9e4; padding:7px 14px; border-radius:999px;
+    border:1px solid rgba(251,113,133,.5); background:linear-gradient(90deg,rgba(251,113,133,.22),rgba(244,114,182,.14))}
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--rose);box-shadow:0 0 0 4px rgba(251,113,133,.16);animation:pulse 2.4s infinite}
+  @keyframes pulse{50%{box-shadow:0 0 0 8px rgba(251,113,133,0)}}
+  h1{font-size:clamp(34px,6vw,58px); line-height:1.04; letter-spacing:-.03em; margin:18px 0 12px;
+    background:linear-gradient(100deg,#fff 6%,#fbcfe8 40%,#fda4af 78%,#fff 100%);
+    -webkit-background-clip:text; background-clip:text; color:transparent}
+  .tagline{max-width:690px; margin:0 0 24px; font-size:16px; line-height:1.65; color:#e7d8e7}
+  .tagline b{color:#fda4af; font-weight:700}
+
+  .hero-grid{display:grid; gap:14px; grid-template-columns:1.5fr 1fr}
+  @media(max-width:760px){.hero-grid{grid-template-columns:1fr}}
+  .product{position:relative; border-radius:20px; padding:22px 24px; overflow:hidden;
+    background:linear-gradient(135deg,rgba(244,114,182,.18),rgba(251,113,133,.10) 60%,rgba(255,255,255,.03));
+    border:1px solid rgba(251,113,133,.4);
+    box-shadow:0 22px 60px -30px rgba(244,114,182,.85), inset 0 1px 0 rgba(255,255,255,.10)}
+  .product::after{content:""; position:absolute; inset:-40% -30% auto auto; width:260px; height:260px; border-radius:50%;
+    background:radial-gradient(circle,rgba(167,139,250,.35),transparent 65%); filter:blur(12px)}
+  .label{font-size:11.5px; letter-spacing:.18em; text-transform:uppercase; color:#f6cfe0; margin-bottom:8px; display:block}
+  .product p{margin:0; font-size:clamp(17px,2.3vw,20px); font-weight:600; color:#fff; position:relative; z-index:1}
+  .product b{color:#fda4af; font-weight:800}
+  .submit{border-radius:20px; padding:20px; display:flex; gap:13px; align-items:flex-start;
+    background:linear-gradient(150deg,rgba(251,191,36,.18),rgba(251,191,36,.05));
+    border:1px solid rgba(251,191,36,.45); box-shadow:0 20px 50px -34px rgba(251,191,36,.9)}
+  .submit .ico{font-size:22px; line-height:1.1}
+  .submit .label{color:#fde68a}
+  .submit p{margin:0; font-size:14.5px; color:#fff7e0}
+  .submit strong{color:#fbbf24}
+
+  .bar{position:sticky; top:0; z-index:20; margin:26px 0 4px; padding:11px 0;
+    background:linear-gradient(180deg,rgba(13,7,16,.94),rgba(13,7,16,.72));
+    backdrop-filter:blur(14px); border-bottom:1px solid rgba(255,255,255,.06)}
+  .bar-in{display:flex; align-items:center; gap:14px; max-width:960px; margin:0 auto; padding:0 2px}
+  .bar span{font-size:12.5px; color:var(--muted); white-space:nowrap; font-variant-numeric:tabular-nums}
+  .track{flex:1; height:6px; border-radius:99px; background:rgba(255,255,255,.09); overflow:hidden}
+  .track i{display:block; height:100%; width:0; border-radius:99px; transition:width .45s cubic-bezier(.22,1,.36,1);
+    background:linear-gradient(90deg,var(--rose),var(--amber))}
+  .print{border:1px solid var(--line); background:rgba(255,255,255,.05); color:var(--muted); font:inherit; font-size:12px; padding:6px 12px; border-radius:99px; cursor:pointer}
+  .print:hover{color:#fff; border-color:rgba(255,255,255,.3)}
+
+  section{position:relative; margin:26px 0; padding:26px 26px 28px; border-radius:22px;
+    background:var(--card); border:1px solid var(--line);
+    opacity:0; transform:translateY(16px); transition:opacity .55s ease, transform .55s cubic-bezier(.22,1,.36,1)}
+  section.in{opacity:1; transform:none}
+  section::before{content:""; position:absolute; left:0; top:22px; bottom:22px; width:3px; border-radius:99px; background:var(--acc)}
+  section h2{display:flex; align-items:center; gap:12px; font-size:12.5px; letter-spacing:.16em; text-transform:uppercase; margin:0 0 16px; color:#e9d7e9}
+  .num{display:grid; place-items:center; width:30px; height:30px; border-radius:10px; font-size:14px; font-weight:800;
+    color:#170910; background:var(--acc); letter-spacing:0}
+  .lead{color:#e6d9e6; margin:0 0 14px; font-size:15.5px}
+  #s0{--acc:var(--violet)} #s1{--acc:var(--rose)} #s2{--acc:var(--emerald)} #s3{--acc:var(--cyan)} #s4{--acc:var(--amber)} #s5{--acc:var(--pink)}
+
+  table{width:100%; border-collapse:collapse; font-size:14px; margin-top:6px}
+  code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:12.8px;
+    background:rgba(167,139,250,.18); color:#ddd6fe; padding:2px 6px; border-radius:6px}
+  .setup{margin-top:20px; padding:18px 20px; border-radius:16px;
+    background:rgba(167,139,250,.07); border:1px solid rgba(167,139,250,.28)}
+  .setup h3{margin:0 0 4px; font-size:15.5px; color:#e9d5ff}
+  .setup .sub{margin:0 0 10px; font-size:13px; color:#b39ab3}
+  ol.steps{margin:0; padding-left:22px}
+  ol.steps li{margin-bottom:10px; font-size:14.6px; color:#e9dfe9}
+  ol.steps li b{color:#fff}
+  .hint{margin:12px 0 0; padding:11px 14px; border-radius:12px; font-size:13.6px;
+    background:rgba(251,191,36,.07); border:1px dashed rgba(251,191,36,.32); color:#ffe9b8}
+  .hint a{color:#fbbf24}
+  th{text-align:left; font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:#a98fa8; padding:8px 10px; border-bottom:1px solid rgba(255,255,255,.10)}
+  td{padding:10px; border-bottom:1px solid rgba(255,255,255,.05); vertical-align:top; color:#e9dfe9}
+  tr:last-child td{border-bottom:0}
+  td b{color:#fff}
+  .no{color:#fda4af; font-weight:700}
+  .yes{color:#6ee7b7; font-weight:700}
+
+  .story p{margin:0 0 12px; color:#e8dce8}
+  .story p:last-child{margin-bottom:0}
+  .bubble{display:inline-block; padding:7px 13px; border-radius:14px 14px 14px 4px; background:rgba(255,255,255,.07);
+    border:1px solid rgba(255,255,255,.08); font-size:13.8px; margin:3px 4px 3px 0; color:#f0e6f0}
+  .hard{margin-top:16px; padding:14px 16px; border-radius:14px; font-size:14.6px;
+    background:rgba(251,113,133,.10); border:1px dashed rgba(251,113,133,.45); color:#ffe4e9}
+  .hard b{color:#fb7185}
+
+  .check{display:flex; gap:13px; align-items:flex-start; padding:13px 15px; margin-bottom:9px; border-radius:14px;
+    background:rgba(255,255,255,.028); border:1px solid rgba(255,255,255,.07); cursor:pointer;
+    transition:background .2s, border-color .2s}
+  .check:hover{background:rgba(52,211,153,.07); border-color:rgba(52,211,153,.28)}
+  .check input{position:absolute; opacity:0; width:0; height:0}
+  .box{flex:0 0 22px; width:22px; height:22px; margin-top:2px; border-radius:7px; border:2px solid rgba(255,255,255,.26);
+    display:grid; place-items:center; transition:all .2s; background:rgba(255,255,255,.03)}
+  .box::after{content:"✓"; font-size:13px; font-weight:900; color:#04150f; opacity:0; transform:scale(.5); transition:all .18s}
+  .check input:checked + .box{background:var(--emerald); border-color:var(--emerald); box-shadow:0 0 0 4px rgba(52,211,153,.16)}
+  .check input:checked + .box::after{opacity:1; transform:scale(1)}
+  .check input:checked ~ .txt{color:#8b7f8b; text-decoration:line-through; text-decoration-color:rgba(52,211,153,.6)}
+  .txt{font-size:15px; color:#f0e6f0; transition:color .2s}
+  .opt .txt{color:#c9b9c9}
+  .tag{font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; color:#fbbf24; border:1px solid rgba(251,191,36,.4); padding:2px 7px; border-radius:99px; margin-left:6px}
+
+  .prompt{border-radius:16px; border:1px solid rgba(34,211,238,.20); background:rgba(34,211,238,.045); margin-bottom:13px; overflow:hidden}
+  .p-head{display:flex; align-items:center; gap:11px; padding:12px 15px; background:rgba(34,211,238,.07); border-bottom:1px solid rgba(34,211,238,.14)}
+  .p-num{font-size:17px; color:var(--cyan); font-weight:800}
+  .p-head h4{margin:0; font-size:14.5px; color:#d9fbff; font-weight:700; flex:1}
+  .copy{border:1px solid rgba(34,211,238,.4); background:rgba(34,211,238,.12); color:#a5f3fc; font:inherit;
+    font-size:12px; padding:5px 12px; border-radius:99px; cursor:pointer; transition:.2s; white-space:nowrap}
+  .copy:hover{background:rgba(34,211,238,.24); color:#fff}
+  .copy.ok{background:var(--emerald); border-color:var(--emerald); color:#04150f; font-weight:700}
+  pre.p-text{margin:0; padding:15px; font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    font-size:13.1px; line-height:1.72; color:#e2dff2; white-space:pre-wrap; word-break:break-word}
+  .rule{margin-top:16px; padding:14px 16px; border-radius:14px; font-size:14.2px;
+    background:linear-gradient(90deg,rgba(34,211,238,.12),transparent); border-left:3px solid var(--cyan); color:#e6f9ff}
+  .rule b{color:#a5f3fc}
+
+  .next{display:grid; gap:12px; grid-template-columns:1fr 1fr}
+  @media(max-width:700px){.next{grid-template-columns:1fr}}
+  .next-card{padding:18px; border-radius:16px; background:rgba(251,191,36,.055); border:1px solid rgba(251,191,36,.26); transition:transform .2s, border-color .2s, background .2s}
+  .next-card:hover{transform:translateY(-3px); border-color:rgba(251,191,36,.55); background:rgba(251,191,36,.09)}
+  .next-card h3{margin:0 0 6px; font-size:16px; color:#fde68a}
+  .next-card p{margin:0; font-size:14.3px; color:#e9dfe9}
+
+  .terms{display:grid; gap:10px; grid-template-columns:1fr 1fr}
+  @media(max-width:700px){.terms{grid-template-columns:1fr}}
+  .term{padding:14px 16px; border-radius:14px; background:rgba(244,114,182,.06); border:1px solid rgba(244,114,182,.22)}
+  .term b{display:block; color:#f9a8d4; font-size:14px; margin-bottom:3px}
+  .term span{font-size:13.6px; color:#e9dfe9}
+
+  footer{margin-top:34px; text-align:center; color:#8f7a8f; font-size:13px}
+  .budget{display:inline-block; margin-bottom:12px; padding:9px 18px; border-radius:99px;
+    background:rgba(244,114,182,.13); border:1px solid rgba(244,114,182,.4); color:#fbcfe8; font-size:13.5px}
+
+  .toast{position:fixed; left:50%; bottom:26px; transform:translate(-50%,20px); opacity:0; pointer-events:none;
+    background:linear-gradient(90deg,var(--emerald),var(--cyan)); color:#04150f; font-weight:800; font-size:13.5px;
+    padding:11px 22px; border-radius:99px; transition:.35s cubic-bezier(.22,1,.36,1); z-index:50;
+    box-shadow:0 18px 40px -18px rgba(52,211,153,.9)}
+  .toast.on{opacity:1; transform:translate(-50%,0)}
+
+  @media print{
+    body{background:#fff; color:#111; padding:0}
+    body::before{display:none}
+    .bar,.copy,.print,.toast{display:none}
+    section{opacity:1; transform:none; border:1px solid #ddd; background:#fff; break-inside:avoid}
+    h1{color:#111; -webkit-text-fill-color:#111}
+    .product,.submit{background:#f8f6f9; border:1px solid #ddd}
+    .product p,.submit p,.story p,.txt,.lead,.next-card p,.term span,td,th{color:#111}
+    pre.p-text{color:#111; background:#f7f7fa}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="kicker"><span class="dot"></span> Buổi 4 / 8 · Khoá n8n</div>
+    <h1>Trợ lý<br>đơn hàng</h1>
+    <p class="tagline">Khách nhắn sáu tin rải rác, bạn đang cắm hoa. Tối mở Excel nhập thì quên mất hai chi tiết. <b>Hôm nay bạn có một trợ lý nhận đơn bằng tin nhắn.</b></p>
+
+    <div class="hero-grid">
+      <div class="product">
+        <span class="label">Sản phẩm cuối buổi</span>
+        <p>Một <b>bot Zalo riêng</b> đọc tin nhắn lộn xộn của bạn và biến nó thành <b>đơn hoa đủ thông tin</b> trong sổ — thiếu gì hỏi lại đúng cái đó.</p>
+      </div>
+      <div class="submit">
+        <div class="ico">📤</div>
+        <div>
+          <span class="label">Hôm nay nộp</span>
+          <p>Workflow <strong>Active</strong> + <strong>3 đơn mẫu</strong> trong sổ + ảnh chụp cuộc chat với bot.</p>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="bar">
+    <div class="bar-in">
+      <span id="ptxt">0 / 5 nghiệm thu</span>
+      <div class="track"><i id="pfill"></i></div>
+      <button class="print" onclick="window.print()">In</button>
+    </div>
+  </div>
+
+  <!-- 0 -->
+  <section id="s0" class="in">
+    <h2><span class="num">0</span> Chuẩn bị: Zalo Bot</h2>
+    <p class="lead"><b>Zalo Bot</b> là một tài khoản Zalo riêng, tên bắt đầu bằng chữ “Bot”, miễn phí. Nó là <b>trợ lý của chính bạn</b>: bạn nhắn nó, nó nhắn lại — khách không thấy, và cũng không tự tìm được bot.</p>
+    <p class="lead">Hai điều cần biết trước khi dựng: bot chỉ nhắn được cho người <b>đã mở chat</b> với nó trước, và free tier cho <b>50 người dùng · 3.000 tin/tháng</b>.</p>
+
+    <div class="setup">
+      <h3>Tạo bot và cài node — làm một lần, khoảng 5 phút</h3>
+      <p class="sub">Chưa có bot thì chưa có gì để vibe. Làm xong 4 bước này rồi mới mở đề bài.</p>
+      <ol class="steps">
+        <li>Mở ứng dụng Zalo → tìm OA <b>Zalo Bot Manager</b> → chọn <b>Tạo bot</b> để mở mini app <b>Zalo Bot Creator</b>.</li>
+        <li>Đặt tên bot — <b>bắt buộc bắt đầu bằng chữ “Bot”</b> (vd <code>Bot Hoa 24/7</code>) → bấm <b>Tạo Bot</b>. Zalo gửi <b>Bot Token</b> dạng <code>{bot_id}:{secret_key}</code> vào tin nhắn Zalo của chính bạn.</li>
+        <li>Trong n8n: <b>Settings → Community Nodes → Install</b> → nhập <code>n8n-nodes-zalo-platform</code>. Gói này đã được n8n xác minh nên cài thẳng từ panel được, không phải build.</li>
+        <li>Tạo credential <b>Zalo Bot API</b> và dán token vào. Thêm node <b>Zalo Bot Trigger</b> — khi bật workflow, nó tự đăng ký webhook với Zalo.</li>
+      </ol>
+      <p class="hint">Zalo cho hai cách nhận tin: <b>webhook</b> (Zalo gọi sang n8n — node này dùng cách này) và <b>long polling</b> (tự hỏi lại mỗi vài giây, hợp khi chạy máy local). Trên n8n cứ đi theo webhook.</p>
+      <p class="hint"><b>Nếu bot im ru:</b> 90% là instance nằm sau Cloudflare và WAF chặn Zalo — chúng gọi webhook bằng <code>User-Agent: Java/1.8.0_192</code>. Tạo rule skip cho đường dẫn <code>/webhook</code>.</p>
+      <p class="hint">Tài liệu gốc của Zalo: <a href="https://docs.zaloplatforms.com/docs/BOT/create_bot" target="_blank" rel="noopener">docs.zaloplatforms.com/docs/BOT/create_bot</a></p>
+    </div>
+  </section>
+
+  <!-- 1 -->
+  <section id="s1">
+    <h2><span class="num">1</span> Đề bài</h2>
+    <div class="story">
+      <p>Bốn giờ chiều, khách nhắn liên tục:</p>
+      <p>
+        <span class="bubble">chị ơi</span>
+        <span class="bubble">còn hồng đỏ không</span>
+        <span class="bubble">đặt 2 bó</span>
+        <span class="bubble">giao 8h tối nay</span>
+        <span class="bubble">12 Lê Lợi</span>
+        <span class="bubble">chúc mừng sinh nhật chị Lan</span>
+      </p>
+      <p>Bạn dựng: nhắn bot <b>một câu gộp</b> → bot bóc ra thành đơn trong sổ. Thiếu gì thì nó hỏi đúng cái đó, không hỏi lại thứ bạn đã nói.</p>
+      <div class="hard">Một chỗ khó: người Việt nói cùng một ý bằng năm cách. Bot phải hiểu "<b>8h tối nay</b>", "<b>20h</b>", "<b>tối nay 8 giờ</b>" là một — và phải biết <b>cái gì còn thiếu</b> thay vì hỏi lại từ đầu.</div>
+    </div>
+  </section>
+
+  <!-- 2 -->
+  <section id="s2">
+    <h2><span class="num">2</span> Nghiệm thu</h2>
+    <p class="lead">Bốn dòng đầu là bắt buộc — tick khi nó đúng thật.</p>
+
+    <label class="check"><input type="checkbox" data-count><span class="box"></span>
+      <span class="txt">3 tin lộn xộn → <b>1 đơn</b> có đủ 6 thông tin: mẫu hoa, số lượng, giờ giao, địa chỉ, người nhận, lời chúc</span></label>
+
+    <label class="check"><input type="checkbox" data-count><span class="box"></span>
+      <span class="txt">Thiếu địa chỉ → bot hỏi <b>đúng 1 câu</b>, không hỏi lại cái đã nói</span></label>
+
+    <label class="check"><input type="checkbox" data-count><span class="box"></span>
+      <span class="txt">Nhắn "sửa giờ thành 9h" → <b>cập nhật đơn cũ</b>, không tạo đơn mới</span></label>
+
+    <label class="check"><input type="checkbox" data-count><span class="box"></span>
+      <span class="txt">Chạy lại cùng một tin → <b>không</b> tạo 2 đơn</span></label>
+
+    <label class="check opt"><input type="checkbox"><span class="box"></span>
+      <span class="txt">Câu không phải đơn ("còn hồng không em?") → bot <b>không tạo rác</b> trong sổ <span class="tag">tuỳ chọn</span></span></label>
+  </section>
+
+  <!-- 3 -->
+  <section id="s3">
+    <h2><span class="num">3</span> Nhờ AI đúng cách</h2>
+    <p class="lead">Dán vào AI theo đúng thứ tự. Câu <b>⓪ làm trước tiên</b> — chưa kiểm tra kết nối thì mọi câu sau đều vô nghĩa.</p>
+
+    <div class="prompt">
+      <div class="p-head"><span class="p-num">⓪</span><h4>Kiểm tra n8n MCP</h4><button class="copy" data-copy>Copy</button></div>
+      <pre class="p-text">Kiểm tra kết nối n8n MCP giúp tôi: gọi công cụ health check, cho tôi biết đang trỏ tới instance nào, phiên bản n8n, và liệt kê 3 workflow gần nhất.</pre>
+    </div>
+
+    <div class="prompt">
+      <div class="p-head"><span class="p-num">①</span><h4>Muốn tạo workflow</h4><button class="copy" data-copy>Copy</button></div>
+      <pre class="p-text">Tôi muốn tạo một workflow: tôi nhắn cho bot Zalo của tôi những câu lộn xộn kiểu "2 bó hồng 500k giao 8h tối nay chị Lan 12 Lê Lợi chúc mừng sinh nhật".
+
+AI bóc ra 6 thông tin: mẫu hoa, số lượng, giờ giao, địa chỉ, người nhận, lời chúc.
+- Thiếu thông tin nào thì bot hỏi lại đúng thông tin đó, không hỏi lại cái đã có.
+- Đủ rồi thì ghi 1 dòng vào Google Sheets và trả lời "Đã tạo đơn #...".
+- Nếu tin nhắn là sửa đổi ("sửa giờ thành 9h") thì cập nhật đơn gần nhất, không tạo đơn mới.
+
+Input: tin nhắn Zalo (text) do chính tôi gửi
+Output: 1 dòng trong Sheets + 1 tin trả lời
+
+Nói rõ mỗi node làm gì, tại sao cần node đó, và node nào có thể bỏ nếu muốn gọn hơn.</pre>
+    </div>
+
+    <div class="prompt">
+      <div class="p-head"><span class="p-num">②</span><h4>Nó chạy sai</h4><button class="copy" data-copy>Copy</button></div>
+      <pre class="p-text">Node đang sai: "Bóc thông tin đơn"
+
+Input mẫu: "2 bó hồng giao 8h tối nay chị Lan 12 Lê Lợi"
+Output hiện tại: bot vẫn hỏi "cho em xin địa chỉ" dù tin đã có "12 Lê Lợi"
+Output tôi muốn: nhận ra địa chỉ, chỉ hỏi phần còn thiếu là lời chúc
+
+Chỉ sửa node này, đừng thêm node khác.</pre>
+    </div>
+
+    <div class="prompt">
+      <div class="p-head"><span class="p-num">③</span><h4>AI sửa mà vẫn sai, hoặc sửa xong bạn không hiểu</h4><button class="copy" data-copy>Copy</button></div>
+      <pre class="p-text">Đây là workflow của tôi: [dán nội dung workflow]
+
+Giải thích lại trong 5 câu, và chỉ ra chỗ nào có thể tạo 2 đơn cho cùng một tin nhắn.</pre>
+    </div>
+
+    <div class="rule"><b>Luật:</b> dán <b>error nguyên văn</b> + <b>input/output mẫu</b>, đừng chụp màn hình mờ. Và đừng cho AI viết lại cả workflow khi chỉ 1 node sai.</div>
+  </section>
+
+  <!-- 4 -->
+  <section id="s4">
+    <h2><span class="num">4</span> Làm tiếp</h2>
+    <p class="lead">Xong bài chính thì làm hai workflow sau — cùng kỹ năng, chỉ đổi nội dung.</p>
+
+    <div class="next">
+      <div class="next-card">
+        <h3>Báo đơn mới cho bạn</h3>
+        <p>Mỗi khi sổ có đơn mới, bot nhắn bạn một tin tóm tắt: mẫu, giờ giao, địa chỉ — kèm câu "1 = nhận, 2 = huỷ" để bạn chốt ngay trên chat.</p>
+      </div>
+      <div class="next-card">
+        <h3>Nhắc dịp khách cũ</h3>
+        <p>Mỗi đơn lưu ngày sinh nhật/kỷ niệm của người nhận. Sáng 9:00, ai có dịp trong 5 ngày tới thì bot nhắc <b>bạn</b> — bạn tự nhắn khách, vì bot không nhắn được người chưa mở chat.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 -->
+  <section id="s5">
+    <h2><span class="num">5</span> Thuật ngữ</h2>
+
+    <div class="terms">
+      <div class="term"><b>Bot token</b><span>Chuỗi <code>{bot_id}:{secret_key}</code> — chìa để n8n gửi tin thay bot của bạn.</span></div>
+      <div class="term"><b>Chat ID</b><span>Mã cuộc trò chuyện. Không có nó thì không trả lời đúng người.</span></div>
+      <div class="term"><b>Trạng thái (state)</b><span>Nhớ bot đang hỏi tới đâu — phải lưu trong sổ, không phải trong đầu.</span></div>
+      <div class="term"><b>Webhook</b><span>Cửa để Zalo gọi vào n8n ngay khi có tin mới.</span></div>
+      <div class="term"><b>Idempotent</b><span>Chạy lại cùng một việc thì không tạo rác thêm.</span></div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="budget">✦ Chúc bạn có một trợ lý nhận đơn lúc 11 giờ đêm, để sáng mai không phải nhớ lại gì cả.</div>
+    <div>Buổi 4 / 8 · Trợ lý đơn hàng</div>
+  </footer>
+</div>
+
+<div class="toast" id="toast">Đủ nghiệm thu 🎉</div>
+
+<script>
+  var boxes = Array.prototype.slice.call(document.querySelectorAll('[data-count]'));
+  var key = 's4-tro-ly-don';
+  var fill = document.getElementById('pfill');
+  var ptxt = document.getElementById('ptxt');
+  var toast = document.getElementById('toast');
+  var wasFull = false;
+
+  try {
+    var saved = JSON.parse(localStorage.getItem(key) || '[]');
+    saved.forEach(function (v, i) { if (v && boxes[i]) boxes[i].checked = true; });
+  } catch (e) {}
+
+  function update() {
+    var done = boxes.filter(function (b) { return b.checked; }).length;
+    fill.style.width = (boxes.length ? Math.round(done / boxes.length * 100) : 0) + '%';
+    ptxt.textContent = done + ' / ' + boxes.length + ' nghiệm thu';
+    var full = done === boxes.length && boxes.length > 0;
+    if (full && !wasFull) { toast.classList.add('on'); setTimeout(function () { toast.classList.remove('on'); }, 2600); }
+    wasFull = full;
+    try { localStorage.setItem(key, JSON.stringify(boxes.map(function (b) { return b.checked; }))); } catch (e) {}
+  }
+  boxes.forEach(function (b) { b.addEventListener('change', update); });
+  update();
+
+  function fallbackCopy(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); } catch (e) {}
+    document.body.removeChild(ta);
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('[data-copy]'), function (btn) {
+    btn.addEventListener('click', function () {
+      var text = btn.closest('.prompt').querySelector('.p-text').innerText;
+      var ok = function () {
+        btn.textContent = 'Đã copy ✓'; btn.classList.add('ok');
+        setTimeout(function () { btn.textContent = 'Copy'; btn.classList.remove('ok'); }, 1700);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(ok).catch(function () { fallbackCopy(text); ok(); });
+      } else { fallbackCopy(text); ok(); }
+    });
+  });
+
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { threshold: 0.12 });
+    Array.prototype.forEach.call(document.querySelectorAll('section'), function (s) { io.observe(s); });
+  } else {
+    Array.prototype.forEach.call(document.querySelectorAll('section'), function (s) { s.classList.add('in'); });
+  }
+</script>
+</body>
+</html>
