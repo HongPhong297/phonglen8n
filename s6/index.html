@@ -1,0 +1,415 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Buổi 6 — Page tự trả lời</title>
+<style>
+  :root{
+    --bg:#060b14; --ink:#e9eeff; --muted:#93a3c6;
+    --fb:#1877f2; --sky:#38bdf8; --emerald:#34d399; --amber:#fbbf24; --rose:#fb7185; --violet:#a78bfa;
+    --card:rgba(255,255,255,.045); --line:rgba(255,255,255,.10);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; background:var(--bg); color:var(--ink); padding:0 18px 90px;
+    font-family:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+    line-height:1.62; -webkit-font-smoothing:antialiased;
+  }
+  body::before{
+    content:""; position:fixed; inset:0; z-index:0; pointer-events:none;
+    background:
+      radial-gradient(900px 620px at 8% -12%, rgba(24,119,242,.26), transparent 62%),
+      radial-gradient(820px 520px at 96% -4%, rgba(56,189,248,.14), transparent 60%),
+      radial-gradient(760px 620px at 50% 112%, rgba(167,139,250,.12), transparent 62%);
+  }
+  .wrap{max-width:960px; margin:0 auto; position:relative; z-index:1}
+
+  header{padding:46px 0 10px}
+  .kicker{display:inline-flex; align-items:center; gap:9px; font-size:12.5px; letter-spacing:.16em;
+    text-transform:uppercase; color:#d6e6ff; padding:7px 14px; border-radius:999px;
+    border:1px solid rgba(24,119,242,.55); background:linear-gradient(90deg,rgba(24,119,242,.24),rgba(56,189,248,.12))}
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--sky);box-shadow:0 0 0 4px rgba(56,189,248,.16);animation:pulse 2.4s infinite}
+  @keyframes pulse{50%{box-shadow:0 0 0 8px rgba(56,189,248,0)}}
+  h1{font-size:clamp(34px,6vw,58px); line-height:1.04; letter-spacing:-.03em; margin:18px 0 12px;
+    background:linear-gradient(100deg,#fff 6%,#bfdbfe 40%,#7dd3fc 78%,#fff 100%);
+    -webkit-background-clip:text; background-clip:text; color:transparent}
+  .tagline{max-width:690px; margin:0 0 24px; font-size:16px; line-height:1.65; color:#c9d6ee}
+  .tagline b{color:#93c5fd; font-weight:700}
+
+  .hero-grid{display:grid; gap:14px; grid-template-columns:1.5fr 1fr}
+  @media(max-width:760px){.hero-grid{grid-template-columns:1fr}}
+  .product{position:relative; border-radius:20px; padding:22px 24px; overflow:hidden;
+    background:linear-gradient(135deg,rgba(24,119,242,.20),rgba(56,189,248,.10) 60%,rgba(255,255,255,.03));
+    border:1px solid rgba(24,119,242,.42);
+    box-shadow:0 22px 60px -30px rgba(24,119,242,.85), inset 0 1px 0 rgba(255,255,255,.10)}
+  .product::after{content:""; position:absolute; inset:-40% -30% auto auto; width:260px; height:260px; border-radius:50%;
+    background:radial-gradient(circle,rgba(56,189,248,.34),transparent 65%); filter:blur(12px)}
+  .label{font-size:11.5px; letter-spacing:.18em; text-transform:uppercase; color:#bcd4f7; margin-bottom:8px; display:block}
+  .product p{margin:0; font-size:clamp(17px,2.3vw,20px); font-weight:600; color:#fff; position:relative; z-index:1}
+  .product b{color:#93c5fd; font-weight:800}
+  .submit{border-radius:20px; padding:20px; display:flex; gap:13px; align-items:flex-start;
+    background:linear-gradient(150deg,rgba(251,191,36,.18),rgba(251,191,36,.05));
+    border:1px solid rgba(251,191,36,.45); box-shadow:0 20px 50px -34px rgba(251,191,36,.9)}
+  .submit .ico{font-size:22px; line-height:1.1}
+  .submit .label{color:#fde68a}
+  .submit p{margin:0; font-size:14.5px; color:#fff7e0}
+  .submit strong{color:#fbbf24}
+
+  .bar{position:sticky; top:0; z-index:20; margin:26px 0 4px; padding:11px 0;
+    background:linear-gradient(180deg,rgba(6,11,20,.94),rgba(6,11,20,.72));
+    backdrop-filter:blur(14px); border-bottom:1px solid rgba(255,255,255,.06)}
+  .bar-in{display:flex; align-items:center; gap:14px; max-width:960px; margin:0 auto; padding:0 2px}
+  .bar span{font-size:12.5px; color:var(--muted); white-space:nowrap; font-variant-numeric:tabular-nums}
+  .track{flex:1; height:6px; border-radius:99px; background:rgba(255,255,255,.09); overflow:hidden}
+  .track i{display:block; height:100%; width:0; border-radius:99px; transition:width .45s cubic-bezier(.22,1,.36,1);
+    background:linear-gradient(90deg,var(--fb),var(--sky))}
+  .print{border:1px solid var(--line); background:rgba(255,255,255,.05); color:var(--muted); font:inherit; font-size:12px; padding:6px 12px; border-radius:99px; cursor:pointer}
+  .print:hover{color:#fff; border-color:rgba(255,255,255,.3)}
+
+  section{position:relative; margin:26px 0; padding:26px 26px 28px; border-radius:22px;
+    background:var(--card); border:1px solid var(--line);
+    opacity:0; transform:translateY(16px); transition:opacity .55s ease, transform .55s cubic-bezier(.22,1,.36,1)}
+  section.in{opacity:1; transform:none}
+  section::before{content:""; position:absolute; left:0; top:22px; bottom:22px; width:3px; border-radius:99px; background:var(--acc)}
+  section h2{display:flex; align-items:center; gap:12px; font-size:12.5px; letter-spacing:.16em; text-transform:uppercase; margin:0 0 16px; color:#cdd7f0}
+  .num{display:grid; place-items:center; width:30px; height:30px; border-radius:10px; font-size:14px; font-weight:800;
+    color:#06101f; background:var(--acc); letter-spacing:0}
+  .lead{color:#dbe3f7; margin:0 0 14px; font-size:15.5px}
+  #s0{--acc:var(--rose)} #s1{--acc:var(--fb)} #s2{--acc:var(--emerald)} #s3{--acc:var(--sky)} #s4{--acc:var(--amber)} #s5{--acc:var(--violet)}
+
+  code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:12.8px;
+    background:rgba(24,119,242,.18); color:#bfdbfe; padding:2px 6px; border-radius:6px}
+  .setup{margin-top:6px; padding:18px 20px; border-radius:16px;
+    background:rgba(24,119,242,.07); border:1px solid rgba(24,119,242,.28)}
+  .setup h3{margin:0 0 4px; font-size:15.5px; color:#dbeafe}
+  .setup .sub{margin:0 0 10px; font-size:13px; color:var(--muted)}
+  ol.steps{margin:0; padding-left:22px}
+  ol.steps li{margin-bottom:10px; font-size:14.6px; color:#e2e8f8}
+  ol.steps li b{color:#fff}
+  .hint{margin:12px 0 0; padding:11px 14px; border-radius:12px; font-size:13.6px;
+    background:rgba(251,191,36,.07); border:1px dashed rgba(251,191,36,.32); color:#ffe9b8}
+  .danger{margin:0 0 16px; padding:16px 18px; border-radius:16px; display:flex; gap:12px; font-size:14.4px;
+    background:rgba(251,113,133,.10); border:1px solid rgba(251,113,133,.42); color:#ffe4e9}
+  .danger .i{font-size:20px; line-height:1.15}
+  .danger b{color:#fff}
+
+  .story p{margin:0 0 12px; color:#d8e0f2}
+  .story p:last-child{margin-bottom:0}
+  .bubble{display:inline-block; padding:7px 13px; border-radius:14px 14px 14px 4px; background:rgba(255,255,255,.07);
+    border:1px solid rgba(255,255,255,.08); font-size:13.8px; margin:3px 4px 3px 0; color:#e9eefb}
+  .hard{margin-top:16px; padding:14px 16px; border-radius:14px; font-size:14.6px;
+    background:rgba(251,113,133,.10); border:1px dashed rgba(251,113,133,.45); color:#ffe4e9}
+  .hard b{color:#fb7185}
+  .say{margin:14px 0 0; padding:14px 16px; border-radius:14px; font-size:14.4px;
+    background:rgba(52,211,153,.08); border-left:3px solid var(--emerald); color:#d9ffe9}
+  .say b{color:#6ee7b7}
+  .reuse{margin:0 0 14px; padding:12px 15px; border-radius:12px; font-size:14.2px;
+    background:rgba(167,139,250,.09); border:1px dashed rgba(167,139,250,.35); color:#e9e1ff}
+  .reuse b{color:#c4b5fd}
+
+  .check{display:flex; gap:13px; align-items:flex-start; padding:13px 15px; margin-bottom:9px; border-radius:14px;
+    background:rgba(255,255,255,.028); border:1px solid rgba(255,255,255,.07); cursor:pointer;
+    transition:background .2s, border-color .2s}
+  .check:hover{background:rgba(52,211,153,.07); border-color:rgba(52,211,153,.28)}
+  .check input{position:absolute; opacity:0; width:0; height:0}
+  .box{flex:0 0 22px; width:22px; height:22px; margin-top:2px; border-radius:7px; border:2px solid rgba(255,255,255,.26);
+    display:grid; place-items:center; transition:all .2s; background:rgba(255,255,255,.03)}
+  .box::after{content:"✓"; font-size:13px; font-weight:900; color:#04150f; opacity:0; transform:scale(.5); transition:all .18s}
+  .check input:checked + .box{background:var(--emerald); border-color:var(--emerald); box-shadow:0 0 0 4px rgba(52,211,153,.16)}
+  .check input:checked + .box::after{opacity:1; transform:scale(1)}
+  .check input:checked ~ .txt{color:#8b97b8; text-decoration:line-through; text-decoration-color:rgba(52,211,153,.6)}
+  .txt{font-size:15px; color:#e4e9ff; transition:color .2s}
+  .opt .txt{color:#b9c1e4}
+  .tag{font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; color:#fbbf24; border:1px solid rgba(251,191,36,.4); padding:2px 7px; border-radius:99px; margin-left:6px}
+
+  .prompt{border-radius:16px; border:1px solid rgba(56,189,248,.20); background:rgba(56,189,248,.045); margin-bottom:13px; overflow:hidden}
+  .p-head{display:flex; align-items:center; gap:11px; padding:12px 15px; background:rgba(56,189,248,.07); border-bottom:1px solid rgba(56,189,248,.14)}
+  .p-num{font-size:17px; color:var(--sky); font-weight:800}
+  .p-head h4{margin:0; font-size:14.5px; color:#ddf5ff; font-weight:700; flex:1}
+  .copy{border:1px solid rgba(56,189,248,.4); background:rgba(56,189,248,.12); color:#bae6fd; font:inherit;
+    font-size:12px; padding:5px 12px; border-radius:99px; cursor:pointer; transition:.2s; white-space:nowrap}
+  .copy:hover{background:rgba(56,189,248,.24); color:#fff}
+  .copy.ok{background:var(--emerald); border-color:var(--emerald); color:#04150f; font-weight:700}
+  pre.p-text{margin:0; padding:15px; font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    font-size:13px; line-height:1.72; color:#dbe6ff; white-space:pre-wrap; word-break:break-word}
+  .rule{margin-top:16px; padding:14px 16px; border-radius:14px; font-size:14.2px;
+    background:linear-gradient(90deg,rgba(56,189,248,.12),transparent); border-left:3px solid var(--sky); color:#e6f9ff}
+  .rule b{color:#bae6fd}
+
+  .next{display:grid; gap:12px; grid-template-columns:1fr 1fr 1fr}
+  @media(max-width:820px){.next{grid-template-columns:1fr}}
+  .next-card{padding:18px; border-radius:16px; background:rgba(251,191,36,.055); border:1px solid rgba(251,191,36,.26); transition:transform .2s, border-color .2s, background .2s}
+  .next-card:hover{transform:translateY(-3px); border-color:rgba(251,191,36,.55); background:rgba(251,191,36,.09)}
+  .next-card h3{margin:0 0 6px; font-size:15.5px; color:#fde68a}
+  .next-card p{margin:0; font-size:14px; color:#dfe5ff}
+
+  .terms{display:grid; gap:10px; grid-template-columns:1fr 1fr}
+  @media(max-width:700px){.terms{grid-template-columns:1fr}}
+  .term{padding:14px 16px; border-radius:14px; background:rgba(167,139,250,.06); border:1px solid rgba(167,139,250,.22)}
+  .term b{display:block; color:#c4b5fd; font-size:14px; margin-bottom:3px}
+  .term span{font-size:13.6px; color:#dfe5ff}
+
+  footer{margin-top:34px; text-align:center; color:#7d87ae; font-size:13px}
+  .budget{display:inline-block; margin-bottom:12px; padding:9px 18px; border-radius:99px;
+    background:rgba(24,119,242,.13); border:1px solid rgba(24,119,242,.4); color:#dbeafe; font-size:13.5px}
+
+  .toast{position:fixed; left:50%; bottom:26px; transform:translate(-50%,20px); opacity:0; pointer-events:none;
+    background:linear-gradient(90deg,var(--emerald),var(--sky)); color:#04150f; font-weight:800; font-size:13.5px;
+    padding:11px 22px; border-radius:99px; transition:.35s cubic-bezier(.22,1,.36,1); z-index:50;
+    box-shadow:0 18px 40px -18px rgba(52,211,153,.9)}
+  .toast.on{opacity:1; transform:translate(-50%,0)}
+
+  @media print{
+    body{background:#fff; color:#111; padding:0}
+    body::before{display:none}
+    .bar,.copy,.print,.toast{display:none}
+    section{opacity:1; transform:none; border:1px solid #ddd; background:#fff; break-inside:avoid}
+    h1{color:#111; -webkit-text-fill-color:#111}
+    .product,.submit{background:#f6f7fa; border:1px solid #ddd}
+    .product p,.submit p,.story p,.txt,.lead,.next-card p,.term span{color:#111}
+    pre.p-text{color:#111; background:#f7f7fa}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="kicker"><span class="dot"></span> Buổi 6 / 8 · Khoá n8n</div>
+    <h1>Page tự<br>trả lời</h1>
+    <p class="tagline">Khách nhắn Page lúc 11 giờ đêm. Sáng ra bạn trả lời thì họ đã đặt chỗ khác. <b>Hôm nay Page tự trả lời — bằng đúng bộ dữ liệu bạn đã làm ở buổi 5.</b></p>
+
+    <div class="hero-grid">
+      <div class="product">
+        <span class="label">Sản phẩm cuối buổi</span>
+        <p>Page Facebook <b>tự trả lời tin nhắn</b>: báo giá, phí giao, gửi ảnh mẫu — và biết <b>khi nào phải chuyển người</b>.</p>
+      </div>
+      <div class="submit">
+        <div class="ico">📤</div>
+        <div>
+          <span class="label">Hôm nay nộp</span>
+          <p>Workflow <strong>Active</strong> + ảnh chụp khách nhắn Page và nhận được trả lời thật.</p>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="bar">
+    <div class="bar-in">
+      <span id="ptxt">0 / 5 nghiệm thu</span>
+      <div class="track"><i id="pfill"></i></div>
+      <button class="print" onclick="window.print()">In</button>
+    </div>
+  </div>
+
+  <!-- 0 -->
+  <section id="s0" class="in">
+    <h2><span class="num">0</span> Chuẩn bị: nối Page với n8n</h2>
+
+    <div class="danger">
+      <span class="i">⚠️</span>
+      <div><b>Đọc trước khi làm:</b> Page chỉ trả lời được trong <b>24 giờ</b> kể từ tin cuối của khách. Quá 24h, muốn nhắn tiếp phải dùng “message tag” và Facebook chỉ cho phép trong vài tình huống — hiểu sai chỗ này là bot “im ru” mà không có lỗi nào.</div>
+    </div>
+
+    <div class="setup">
+      <h3>Năm bước, làm một lần</h3>
+      <ol class="steps">
+        <li>Vào <b>developers.facebook.com</b> → <b>Create app</b>. Loại app không quan trọng — chọn <b>Business</b> hay <b>Other</b> đều được, miễn là thêm được sản phẩm <b>Messenger</b> và gắn đúng Page của shop.</li>
+        <li>Trong Messenger → <b>Settings</b> → nối <b>Page</b> của shop → lấy <b>Page Access Token</b>.</li>
+        <li>Tạo credential trong n8n (Facebook Graph / Facebook Messenger) và dán token đó.</li>
+        <li>Ở mục <b>Webhooks</b>: Callback URL = <code>https://n8n.tenban.com/webhook/…</code>, Verify Token = một chuỗi bạn tự đặt → subscribe field <b>messages</b>.</li>
+        <li>Bật workflow, rồi nhắn thử Page bằng <b>chính tài khoản admin</b> (xem cảnh báo bên dưới).</li>
+      </ol>
+      <p class="hint"><b>App đang ở “Development mode”</b> thì chỉ admin/tester của app nhắn mới có trả lời — người ngoài nhắn sẽ im. Muốn mở cho khách thật phải bấm <b>Live</b> và xin quyền <code>pages_messaging</code> (Facebook duyệt). Trong lớp, để Development là đủ để test.</p>
+      <p class="hint">Mỗi App chỉ có <b>một</b> URL webhook. Nếu sau này làm thêm workflow khác cũng nhận tin Page, phải gộp vào một đầu nhận rồi chia nhánh.</p>
+    </div>
+  </section>
+
+  <!-- 1 -->
+  <section id="s1">
+    <h2><span class="num">1</span> Đề bài</h2>
+    <div class="story">
+      <p>Khách nhắn Page lúc 11 giờ đêm:</p>
+      <p>
+        <span class="bubble">shop ơi còn hàng không</span>
+        <span class="bubble">bó 350k giao được q7 không</span>
+        <span class="bubble">mai 8h giao được không shop</span>
+      </p>
+      <p>Bạn dựng: Page tự trả lời — <b>báo giá</b>, <b>phí giao theo quận</b>, gửi <b>ảnh mẫu</b>, và chuyển người khi khách hỏi thứ không được để máy trả lời.</p>
+      <div class="hard">Hai chỗ khó: (1) Page gửi tin thì Facebook <b>gửi lại chính tin đó vào webhook</b> — không lọc <code>is_echo</code> là bot tự trả lời mình; (2) quá <b>24 giờ</b> là không gửi được nữa, và lỗi này không hiện ở đâu cả.</div>
+    </div>
+
+    <div class="reuse"><b>Không phải làm lại dữ liệu:</b> ba sổ ở buổi 5 — bảng giá, phí giao, FAQ — dùng nguyên. Đây chính là lý do buổi 5 tách dữ liệu ra khỏi workflow: đổi kênh, dữ liệu vẫn còn.</div>
+  </section>
+
+  <!-- 2 -->
+  <section id="s2">
+    <h2><span class="num">2</span> Nghiệm thu</h2>
+    <p class="lead">Bốn dòng đầu là bắt buộc — tick khi nó đúng thật.</p>
+
+    <label class="check"><input type="checkbox" data-count><span class="box"></span>
+      <span class="txt">Khách nhắn Page → nhận trả lời trong <b>10 giây</b>, đúng câu hỏi</span></label>
+
+    <label class="check"><input type="checkbox" data-count><span class="box"></span>
+      <span class="txt">Hỏi “q7 giao bao nhiêu” → trả đúng <b>phí của quận 7</b>, không phải phí chung</span></label>
+
+    <label class="check"><input type="checkbox" data-count><span class="box"></span>
+      <span class="txt">Bot <b>không trả lời tin của chính Page</b> (lọc <code>is_echo</code>) — không có vòng lặp</span></label>
+
+    <label class="check"><input type="checkbox" data-count><span class="box"></span>
+      <span class="txt">Khách hỏi khiếu nại / bớt giá → bot <b>chuyển người</b>, không tự quyết</span></label>
+
+    <label class="check opt"><input type="checkbox"><span class="box"></span>
+      <span class="txt">Gửi kèm được <b>ảnh mẫu</b> khi khách hỏi mẫu <span class="tag">tuỳ chọn</span></span></label>
+  </section>
+
+  <!-- 3 -->
+  <section id="s3">
+    <h2><span class="num">3</span> Nhờ AI đúng cách</h2>
+    <p class="lead">Dán vào AI theo đúng thứ tự. Câu <b>⓪ làm trước tiên</b> — chưa kiểm tra kết nối thì mọi câu sau đều vô nghĩa.</p>
+
+    <div class="prompt">
+      <div class="p-head"><span class="p-num">⓪</span><h4>Kiểm tra n8n MCP</h4><button class="copy" data-copy>Copy</button></div>
+      <pre class="p-text">Kiểm tra kết nối n8n MCP giúp tôi: gọi công cụ health check, cho tôi biết đang trỏ tới instance nào, phiên bản n8n, và liệt kê 3 workflow gần nhất.</pre>
+    </div>
+
+    <div class="prompt">
+      <div class="p-head"><span class="p-num">①</span><h4>Muốn tạo workflow</h4><button class="copy" data-copy>Copy</button></div>
+      <pre class="p-text">Tôi muốn tạo một workflow trả lời tin nhắn khách trên Facebook Page của shop hoa.
+
+Yêu cầu:
+- Nhận tin qua webhook của Facebook (Messenger). Nếu bản n8n của tôi có node Facebook Trigger thì dùng nó; nếu không thì dùng Webhook + xác minh hub.challenge.
+- Lọc bỏ event có message.is_echo = true, để Page không trả lời chính nó.
+- Trả lời bằng AI dựa trên 3 sheet đã có: bảng giá, phí giao (theo quận), FAQ. Không biết → chuyển người.
+- Nếu khách hỏi mẫu thì gửi kèm ảnh (dùng attachment hoặc link ảnh công khai).
+- Ghi log mọi tin vào Sheets, kèm Page-scoped ID của khách.
+- Nếu tin cuối của khách đã quá 24 giờ thì không gửi trả lời, chỉ ghi log và báo cho tôi.
+
+Input: tin nhắn Messenger từ khách
+Output: 1 tin trả lời + 1 dòng log
+
+Nói rõ mỗi node làm gì, tại sao cần node đó, và node nào có thể bỏ nếu muốn gọn hơn.</pre>
+    </div>
+
+    <div class="prompt">
+      <div class="p-head"><span class="p-num">②</span><h4>Nó chạy sai</h4><button class="copy" data-copy>Copy</button></div>
+      <pre class="p-text">Node đang sai: "Gửi tin nhắn Messenger"
+
+Input mẫu: khách nhắn "q7 giao bao nhiêu", cách đây 30 giờ
+Output hiện tại: workflow chạy xong, log có ghi, nhưng khách không nhận được tin và không có lỗi
+Output tôi muốn: phát hiện đã quá 24 giờ thì KHÔNG gửi, ghi log là "quá hạn 24h" và báo Telegram/Zalo cho tôi
+
+Chỉ sửa node này, đừng thêm node khác.</pre>
+    </div>
+
+    <div class="prompt">
+      <div class="p-head"><span class="p-num">③</span><h4>AI sửa mà vẫn sai, hoặc sửa xong bạn không hiểu</h4><button class="copy" data-copy>Copy</button></div>
+      <pre class="p-text">Đây là workflow của tôi: [dán nội dung workflow]
+
+Giải thích lại trong 5 câu, và chỉ ra chỗ nào có thể khiến Page tự trả lời tin của chính nó.</pre>
+    </div>
+
+    <div class="rule"><b>Luật:</b> dán <b>error nguyên văn</b> + <b>input/output mẫu</b>, đừng chụp màn hình mờ. Và đừng cho AI viết lại cả workflow khi chỉ 1 node sai.</div>
+  </section>
+
+  <!-- 4 -->
+  <section id="s4">
+    <h2><span class="num">4</span> Làm tiếp</h2>
+    <p class="lead">Xong bài chính thì làm tiếp — cùng kỹ năng, chỉ đổi nội dung.</p>
+
+    <div class="next">
+      <div class="next-card">
+        <h3>Trả lời comment</h3>
+        <p>Khách comment vào bài bán hoa → trả lời công khai một câu + nhắn riêng vào inbox. Hai tin, một lần xử lý.</p>
+      </div>
+      <div class="next-card">
+        <h3>Cứu khách quá 24 giờ</h3>
+        <p>Tin nào quá hạn thì đẩy sang Zalo (buổi 5) hoặc gửi bạn danh sách để gọi lại. Không bỏ rơi khách chỉ vì Facebook chặn.</p>
+      </div>
+      <div class="next-card">
+        <h3>Đo tốc độ trả lời</h3>
+        <p>Cuối ngày tính % tin được trả lời trong 1 giờ, gửi bạn một dòng. Đây là chỉ số ảnh hưởng đơn hàng nhất trên Page.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 -->
+  <section id="s5">
+    <h2><span class="num">5</span> Thuật ngữ</h2>
+
+    <div class="terms">
+      <div class="term"><b>Page Access Token</b><span>Chìa để gửi tin thay Page. Hết hạn là bot im lặng.</span></div>
+      <div class="term"><b>is_echo</b><span>Cờ cho biết tin do chính Page gửi — không lọc là bot tự trả lời mình.</span></div>
+      <div class="term"><b>hub.challenge</b><span>Chuỗi Facebook gửi lúc đăng ký webhook; trả lại đúng là xác minh xong.</span></div>
+      <div class="term"><b>24h window</b><span>Chỉ được trả lời trong 24 giờ kể từ tin cuối của khách.</span></div>
+      <div class="term"><b>Development mode</b><span>Chỉ admin/tester nhắn mới có trả lời; mở cho khách phải xin duyệt quyền.</span></div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="budget">✦ Chúc Page bạn không còn tin nhắn nào ngủ quên lúc 11 giờ đêm.</div>
+    <div>Buổi 6 / 8 · Page tự trả lời</div>
+  </footer>
+</div>
+
+<div class="toast" id="toast">Đủ nghiệm thu 🎉</div>
+
+<script>
+  var boxes = Array.prototype.slice.call(document.querySelectorAll('[data-count]'));
+  var key = 's6-page-tu-tra-loi';
+  var fill = document.getElementById('pfill');
+  var ptxt = document.getElementById('ptxt');
+  var toast = document.getElementById('toast');
+  var wasFull = false;
+
+  try {
+    var saved = JSON.parse(localStorage.getItem(key) || '[]');
+    saved.forEach(function (v, i) { if (v && boxes[i]) boxes[i].checked = true; });
+  } catch (e) {}
+
+  function update() {
+    var done = boxes.filter(function (b) { return b.checked; }).length;
+    fill.style.width = (boxes.length ? Math.round(done / boxes.length * 100) : 0) + '%';
+    ptxt.textContent = done + ' / ' + boxes.length + ' nghiệm thu';
+    var full = done === boxes.length && boxes.length > 0;
+    if (full && !wasFull) { toast.classList.add('on'); setTimeout(function () { toast.classList.remove('on'); }, 2600); }
+    wasFull = full;
+    try { localStorage.setItem(key, JSON.stringify(boxes.map(function (b) { return b.checked; }))); } catch (e) {}
+  }
+  boxes.forEach(function (b) { b.addEventListener('change', update); });
+  update();
+
+  function fallbackCopy(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); } catch (e) {}
+    document.body.removeChild(ta);
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('[data-copy]'), function (btn) {
+    btn.addEventListener('click', function () {
+      var text = btn.closest('.prompt').querySelector('.p-text').innerText;
+      var ok = function () {
+        btn.textContent = 'Đã copy ✓'; btn.classList.add('ok');
+        setTimeout(function () { btn.textContent = 'Copy'; btn.classList.remove('ok'); }, 1700);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(ok).catch(function () { fallbackCopy(text); ok(); });
+      } else { fallbackCopy(text); ok(); }
+    });
+  });
+
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { threshold: 0.12 });
+    Array.prototype.forEach.call(document.querySelectorAll('section'), function (s) { io.observe(s); });
+  } else {
+    Array.prototype.forEach.call(document.querySelectorAll('section'), function (s) { s.classList.add('in'); });
+  }
+</script>
+</body>
+</html>
