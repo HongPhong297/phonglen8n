@@ -1,0 +1,458 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Buổi 7 — Page tự viết &amp; tự đăng</title>
+<style>
+  :root{
+    --bg:#070c16; --ink:#e9eeff; --muted:#93a3c6;
+    --fb:#1877f2; --sky:#38bdf8; --emerald:#34d399; --amber:#fbbf24; --rose:#fb7185; --violet:#a78bfa;
+    --card:rgba(255,255,255,.045); --line:rgba(255,255,255,.10);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; background:var(--bg); color:var(--ink); padding:0 18px 90px;
+    font-family:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+    line-height:1.62; -webkit-font-smoothing:antialiased;
+  }
+  body::before{
+    content:""; position:fixed; inset:0; z-index:0; pointer-events:none;
+    background:
+      radial-gradient(900px 620px at 8% -12%, rgba(24,119,242,.24), transparent 62%),
+      radial-gradient(820px 520px at 96% -4%, rgba(52,211,153,.14), transparent 60%),
+      radial-gradient(760px 620px at 50% 112%, rgba(167,139,250,.13), transparent 62%);
+  }
+  .wrap{max-width:960px; margin:0 auto; position:relative; z-index:1}
+
+  header{padding:46px 0 10px}
+  .kicker{display:inline-flex; align-items:center; gap:9px; font-size:12.5px; letter-spacing:.16em;
+    text-transform:uppercase; color:#d6e6ff; padding:7px 14px; border-radius:999px;
+    border:1px solid rgba(24,119,242,.55); background:linear-gradient(90deg,rgba(24,119,242,.24),rgba(52,211,153,.12))}
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--emerald);box-shadow:0 0 0 4px rgba(52,211,153,.16);animation:pulse 2.4s infinite}
+  @keyframes pulse{50%{box-shadow:0 0 0 8px rgba(52,211,153,0)}}
+  h1{font-size:clamp(32px,5.6vw,54px); line-height:1.05; letter-spacing:-.03em; margin:18px 0 12px;
+    background:linear-gradient(100deg,#fff 6%,#bfdbfe 40%,#6ee7b7 78%,#fff 100%);
+    -webkit-background-clip:text; background-clip:text; color:transparent}
+  .tagline{max-width:690px; margin:0 0 24px; font-size:16px; line-height:1.65; color:#c9d6ee}
+  .tagline b{color:#93c5fd; font-weight:700}
+
+  .hero-grid{display:grid; gap:14px; grid-template-columns:1.5fr 1fr}
+  @media(max-width:760px){.hero-grid{grid-template-columns:1fr}}
+  .product{position:relative; border-radius:20px; padding:22px 24px; overflow:hidden;
+    background:linear-gradient(135deg,rgba(24,119,242,.18),rgba(52,211,153,.10) 60%,rgba(255,255,255,.03));
+    border:1px solid rgba(24,119,242,.40);
+    box-shadow:0 22px 60px -30px rgba(24,119,242,.8), inset 0 1px 0 rgba(255,255,255,.10)}
+  .product::after{content:""; position:absolute; inset:-40% -30% auto auto; width:260px; height:260px; border-radius:50%;
+    background:radial-gradient(circle,rgba(52,211,153,.30),transparent 65%); filter:blur(12px)}
+  .label{font-size:11.5px; letter-spacing:.18em; text-transform:uppercase; color:#bcd4f7; margin-bottom:8px; display:block}
+  .product p{margin:0; font-size:clamp(17px,2.3vw,20px); font-weight:600; color:#fff; position:relative; z-index:1}
+  .product b{color:#93c5fd; font-weight:800}
+  .submit{border-radius:20px; padding:20px; display:flex; gap:13px; align-items:flex-start;
+    background:linear-gradient(150deg,rgba(251,191,36,.18),rgba(251,191,36,.05));
+    border:1px solid rgba(251,191,36,.45); box-shadow:0 20px 50px -34px rgba(251,191,36,.9)}
+  .submit .ico{font-size:22px; line-height:1.1}
+  .submit .label{color:#fde68a}
+  .submit p{margin:0; font-size:14.5px; color:#fff7e0}
+  .submit strong{color:#fbbf24}
+
+  .bar{position:sticky; top:0; z-index:20; margin:26px 0 4px; padding:11px 0;
+    background:linear-gradient(180deg,rgba(7,12,22,.94),rgba(7,12,22,.72));
+    backdrop-filter:blur(14px); border-bottom:1px solid rgba(255,255,255,.06)}
+  .bar-in{display:flex; align-items:center; gap:14px; max-width:960px; margin:0 auto; padding:0 2px}
+  .bar span{font-size:12.5px; color:var(--muted); white-space:nowrap; font-variant-numeric:tabular-nums}
+  .track{flex:1; height:6px; border-radius:99px; background:rgba(255,255,255,.09); overflow:hidden}
+  .track i{display:block; height:100%; width:0; border-radius:99px; transition:width .45s cubic-bezier(.22,1,.36,1);
+    background:linear-gradient(90deg,var(--fb),var(--emerald))}
+  .print{border:1px solid var(--line); background:rgba(255,255,255,.05); color:var(--muted); font:inherit; font-size:12px; padding:6px 12px; border-radius:99px; cursor:pointer}
+  .print:hover{color:#fff; border-color:rgba(255,255,255,.3)}
+
+  section{position:relative; margin:26px 0; padding:26px 26px 28px; border-radius:22px;
+    background:var(--card); border:1px solid var(--line);
+    opacity:0; transform:translateY(16px); transition:opacity .55s ease, transform .55s cubic-bezier(.22,1,.36,1)}
+  section.in{opacity:1; transform:none}
+  section::before{content:""; position:absolute; left:0; top:22px; bottom:22px; width:3px; border-radius:99px; background:var(--acc)}
+  section h2{display:flex; align-items:center; gap:12px; font-size:12.5px; letter-spacing:.16em; text-transform:uppercase; margin:0 0 16px; color:#cdd7f0}
+  .num{display:grid; place-items:center; width:30px; height:30px; border-radius:10px; font-size:14px; font-weight:800;
+    color:#06101f; background:var(--acc); letter-spacing:0}
+  .lead{color:#dbe3f7; margin:0 0 14px; font-size:15.5px}
+  #s0{--acc:var(--rose)} #s1{--acc:var(--fb)} #s2{--acc:var(--emerald)} #s3{--acc:var(--sky)} #s4{--acc:var(--amber)} #s5{--acc:var(--violet)}
+
+  code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:12.8px;
+    background:rgba(24,119,242,.18); color:#bfdbfe; padding:2px 6px; border-radius:6px}
+  .setup{margin-top:6px; padding:18px 20px; border-radius:16px;
+    background:rgba(24,119,242,.07); border:1px solid rgba(24,119,242,.28)}
+  .setup h3{margin:0 0 4px; font-size:15.5px; color:#dbeafe}
+  .setup .sub{margin:0 0 10px; font-size:13px; color:var(--muted)}
+  ol.steps{margin:0; padding-left:22px}
+  ol.steps li{margin-bottom:10px; font-size:14.6px; color:#e2e8f8}
+  ol.steps li b{color:#fff}
+  .hint{margin:12px 0 0; padding:11px 14px; border-radius:12px; font-size:13.6px;
+    background:rgba(251,191,36,.07); border:1px dashed rgba(251,191,36,.32); color:#ffe9b8}
+  .danger{margin:0 0 16px; padding:16px 18px; border-radius:16px; display:flex; gap:12px; font-size:14.4px;
+    background:rgba(251,113,133,.10); border:1px solid rgba(251,113,133,.42); color:#ffe4e9}
+  .danger .i{font-size:20px; line-height:1.15}
+  .danger b{color:#fff}
+
+  table{width:100%; border-collapse:collapse; font-size:14px; margin-top:6px}
+  th{text-align:left; font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:#8fa3c8; padding:8px 10px; border-bottom:1px solid rgba(255,255,255,.10)}
+  td{padding:10px; border-bottom:1px solid rgba(255,255,255,.05); vertical-align:top; color:#e4e9ff}
+  tr:last-child td{border-bottom:0}
+  td b{color:#fff}
+
+  .story p{margin:0 0 12px; color:#d8e0f2}
+  .story p:last-child{margin-bottom:0}
+  .bubble{display:inline-block; padding:7px 13px; border-radius:14px 14px 14px 4px; background:rgba(255,255,255,.07);
+    border:1px solid rgba(255,255,255,.08); font-size:13.8px; margin:3px 4px 3px 0; color:#e9eefb}
+  .hard{margin-top:16px; padding:14px 16px; border-radius:14px; font-size:14.6px;
+    background:rgba(251,113,133,.10); border:1px dashed rgba(251,113,133,.45); color:#ffe4e9}
+  .hard b{color:#fb7185}
+  .say{margin:14px 0 0; padding:14px 16px; border-radius:14px; font-size:14.4px;
+    background:rgba(52,211,153,.08); border-left:3px solid var(--emerald); color:#d9ffe9}
+  .say b{color:#6ee7b7}
+  .reuse{margin:0 0 14px; padding:12px 15px; border-radius:12px; font-size:14.2px;
+    background:rgba(167,139,250,.09); border:1px dashed rgba(167,139,250,.35); color:#e9e1ff}
+  .reuse b{color:#c4b5fd}
+
+  .flow{display:grid; gap:10px; grid-template-columns:1fr auto 1fr; align-items:center; margin:16px 0 6px}
+  @media(max-width:700px){.flow{grid-template-columns:1fr}}
+  .flow .box2{padding:14px 16px; border-radius:14px; background:rgba(24,119,242,.09); border:1px solid rgba(24,119,242,.32); font-size:14px; color:#dfe5ff}
+  .flow .box2 b{display:block; color:#bfdbfe; font-size:14.5px; margin-bottom:3px}
+  .flow .arw{font-size:20px; color:var(--emerald); text-align:center}
+
+  .check{display:flex; gap:13px; align-items:flex-start; padding:13px 15px; margin-bottom:9px; border-radius:14px;
+    background:rgba(255,255,255,.028); border:1px solid rgba(255,255,255,.07); cursor:pointer;
+    transition:background .2s, border-color .2s}
+  .check:hover{background:rgba(52,211,153,.07); border-color:rgba(52,211,153,.28)}
+  .check input{position:absolute; opacity:0; width:0; height:0}
+  .box{flex:0 0 22px; width:22px; height:22px; margin-top:2px; border-radius:7px; border:2px solid rgba(255,255,255,.26);
+    display:grid; place-items:center; transition:all .2s; background:rgba(255,255,255,.03)}
+  .box::after{content:"✓"; font-size:13px; font-weight:900; color:#04150f; opacity:0; transform:scale(.5); transition:all .18s}
+  .check input:checked + .box{background:var(--emerald); border-color:var(--emerald); box-shadow:0 0 0 4px rgba(52,211,153,.16)}
+  .check input:checked + .box::after{opacity:1; transform:scale(1)}
+  .check input:checked ~ .txt{color:#8b97b8; text-decoration:line-through; text-decoration-color:rgba(52,211,153,.6)}
+  .txt{font-size:15px; color:#e4e9ff; transition:color .2s}
+  .opt .txt{color:#b9c1e4}
+  .tag{font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; color:#fbbf24; border:1px solid rgba(251,191,36,.4); padding:2px 7px; border-radius:99px; margin-left:6px}
+
+  .prompt{border-radius:16px; border:1px solid rgba(56,189,248,.20); background:rgba(56,189,248,.045); margin-bottom:13px; overflow:hidden}
+  .p-head{display:flex; align-items:center; gap:11px; padding:12px 15px; background:rgba(56,189,248,.07); border-bottom:1px solid rgba(56,189,248,.14)}
+  .p-num{font-size:17px; color:var(--sky); font-weight:800}
+  .p-head h4{margin:0; font-size:14.5px; color:#ddf5ff; font-weight:700; flex:1}
+  .copy{border:1px solid rgba(56,189,248,.4); background:rgba(56,189,248,.12); color:#bae6fd; font:inherit;
+    font-size:12px; padding:5px 12px; border-radius:99px; cursor:pointer; transition:.2s; white-space:nowrap}
+  .copy:hover{background:rgba(56,189,248,.24); color:#fff}
+  .copy.ok{background:var(--emerald); border-color:var(--emerald); color:#04150f; font-weight:700}
+  pre.p-text{margin:0; padding:15px; font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    font-size:13px; line-height:1.72; color:#dbe6ff; white-space:pre-wrap; word-break:break-word}
+  .rule{margin-top:16px; padding:14px 16px; border-radius:14px; font-size:14.2px;
+    background:linear-gradient(90deg,rgba(56,189,248,.12),transparent); border-left:3px solid var(--sky); color:#e6f9ff}
+  .rule b{color:#bae6fd}
+
+  .next{display:grid; gap:12px; grid-template-columns:1fr 1fr 1fr}
+  @media(max-width:820px){.next{grid-template-columns:1fr}}
+  .next-card{padding:18px; border-radius:16px; background:rgba(251,191,36,.055); border:1px solid rgba(251,191,36,.26); transition:transform .2s, border-color .2s, background .2s}
+  .next-card:hover{transform:translateY(-3px); border-color:rgba(251,191,36,.55); background:rgba(251,191,36,.09)}
+  .next-card h3{margin:0 0 6px; font-size:15.5px; color:#fde68a}
+  .next-card p{margin:0; font-size:14px; color:#dfe5ff}
+  .next-card .why{display:block; margin-top:8px; font-size:12.6px; color:#a9b6d8; border-top:1px dashed rgba(255,255,255,.12); padding-top:7px}
+
+  .terms{display:grid; gap:10px; grid-template-columns:1fr 1fr}
+  @media(max-width:700px){.terms{grid-template-columns:1fr}}
+  .term{padding:14px 16px; border-radius:14px; background:rgba(167,139,250,.06); border:1px solid rgba(167,139,250,.22)}
+  .term b{display:block; color:#c4b5fd; font-size:14px; margin-bottom:3px}
+  .term span{font-size:13.6px; color:#dfe5ff}
+
+  footer{margin-top:34px; text-align:center; color:#7d87ae; font-size:13px}
+  .budget{display:inline-block; margin-bottom:12px; padding:9px 18px; border-radius:99px;
+    background:rgba(24,119,242,.13); border:1px solid rgba(24,119,242,.4); color:#dbeafe; font-size:13.5px}
+
+  .toast{position:fixed; left:50%; bottom:26px; transform:translate(-50%,20px); opacity:0; pointer-events:none;
+    background:linear-gradient(90deg,var(--emerald),var(--sky)); color:#04150f; font-weight:800; font-size:13.5px;
+    padding:11px 22px; border-radius:99px; transition:.35s cubic-bezier(.22,1,.36,1); z-index:50;
+    box-shadow:0 18px 40px -18px rgba(52,211,153,.9)}
+  .toast.on{opacity:1; transform:translate(-50%,0)}
+
+  @media print{
+    body{background:#fff; color:#111; padding:0}
+    body::before{display:none}
+    .bar,.copy,.print,.toast{display:none}
+    section{opacity:1; transform:none; border:1px solid #ddd; background:#fff; break-inside:avoid}
+    h1{color:#111; -webkit-text-fill-color:#111}
+    .product,.submit{background:#f6f7fa; border:1px solid #ddd}
+    .product p,.submit p,.story p,.txt,.lead,.next-card p,.term span,td,th{color:#111}
+    pre.p-text{color:#111; background:#f7f7fa}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="kicker"><span class="dot"></span> Buổi 7 / 8 · Khoá n8n</div>
+    <h1>Page tự viết<br>&amp; tự đăng</h1>
+    <p class="tagline">Buổi 6 lo phần <b>nhận tin</b>. Hôm nay lo phần <b>viết bài và đăng bài</b> — bạn chỉ chọn mẫu hoa và dịp, còn lại máy làm.</p>
+
+    <div class="hero-grid">
+      <div class="product">
+        <span class="label">Sản phẩm cuối buổi</span>
+        <p>Mỗi sáng 9 giờ, Page có bài mới: <b>caption do AI viết từ tên hoa, giá, dịp</b>, ảnh lấy từ sổ. <b>Không đăng trùng, không bịa giá.</b></p>
+      </div>
+      <div class="submit">
+        <div class="ico">📤</div>
+        <div>
+          <span class="label">Hôm nay nộp</span>
+          <p>Bài thật trên Page + 7 caption AI viết trong sổ + dòng đổi trạng thái <strong>“đã đăng”</strong> kèm <strong>mã bài</strong>.</p>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="bar">
+    <div class="bar-in">
+      <span id="ptxt">0 / 5 nghiệm thu</span>
+      <div class="track"><i id="pfill"></i></div>
+      <button class="print" onclick="window.print()">In</button>
+    </div>
+  </div>
+
+  <!-- 0 -->
+  <section id="s0" class="in">
+    <h2><span class="num">0</span> Chuẩn bị</h2>
+
+    <div class="reuse"><b>Không tạo App mới:</b> dùng lại App + Page Access Token của buổi 6. Chỉ khác một chỗ — token đó <b>chưa có quyền đăng bài</b>.</div>
+
+    <div class="danger">
+      <span class="i">⚠️</span>
+      <div><b>Ảnh phải là link công khai.</b> Đường dẫn kiểu <code>/root/hoa/hd01.jpg</code> ở buổi 5 Zalo dùng được, nhưng Facebook <b>không đọc được file trên máy bạn</b> — nó tự đi tải ảnh từ internet. Dùng URL <code>https://…</code> hoặc bật một thư mục ảnh công khai trên VPS.</div>
+    </div>
+
+    <div class="setup">
+      <h3>Năm bước</h3>
+      <ol class="steps">
+        <li>Trong App → thêm quyền <b><code>pages_manage_posts</code></b> cho token, rồi <b>lấy lại token</b> (token cũ không tự có quyền mới) và cập nhật credential trong n8n.</li>
+        <li>Lập <b>sheet “mẫu tuần”</b>: <code>mã</code> · <code>tên</code> · <code>giá</code> · <code>số bông</code> · <code>file_anh</code> (URL công khai) · <code>dịp</code> (sinh nhật / 8-3 / cưới…) · <code>ghi_chú</code>.</li>
+        <li>Lập <b>sheet “nội dung”</b> (sổ đăng bài): <code>ngày</code> · <code>giờ</code> · <code>caption</code> · <code>file_anh</code> · <code>trạng thái</code> · <code>post_id</code>.</li>
+        <li>Để sẵn 2 dòng mẫu, trong đó <b>1 dòng có giờ đã qua</b> để test ngay, không phải chờ 9 giờ sáng.</li>
+      </ol>
+      <p class="hint"><b>Ba điều cấm — đưa thẳng vào prompt:</b> không bịa giá và số bông · không hứa “miễn phí giao” · không dùng từ quá mỹ miều kiểu “tuyệt tác nghệ thuật”.</p>
+      <p class="hint"><b>Không cần caption mẫu.</b> AI viết từ dữ liệu thật của chính dòng đó + một câu mô tả giọng. Muốn giống bạn hơn thì sửa tay 7 caption đầu, rồi dán chính 7 câu đã sửa vào prompt làm ví dụ — để sau cũng được.</p>
+    </div>
+  </section>
+
+  <!-- 1 -->
+  <section id="s1">
+    <h2><span class="num">1</span> Đề bài</h2>
+    <div class="story">
+      <p>Shop có 20 mẫu hoa mới. Bạn không có thời gian ngồi viết caption cho từng mẫu — mà ngày nào Page cũng nên có bài.</p>
+      <p>Bạn dựng <b>hai workflow nối nhau</b>: một cái viết, một cái đăng.</p>
+
+      <div class="flow">
+        <div class="box2"><b>① Xưởng caption</b>Chủ nhật 20:00 — đọc “mẫu tuần”, AI viết caption từ tên hoa, giá, số bông, dịp — ghi 7 dòng “chờ đăng”.</div>
+        <div class="arw">→</div>
+        <div class="box2"><b>② Máy đăng</b>9:00 mỗi ngày — lấy dòng đến hạn, đăng ảnh + caption, ghi mã bài, đổi trạng thái “đã đăng”.</div>
+      </div>
+
+      <div class="hard">Ba chỗ khó: (1) AI <b>bịa giá</b> nếu bạn không đưa giá vào prompt — caption ghi 350k trong khi sổ ghi 380k là mất uy tín thật; (2) Facebook <b>không có chống trùng</b> — chạy lại là bài đăng lần hai; (3) ảnh phải là <b>URL công khai</b>.</div>
+    </div>
+
+    <table>
+      <tr><th>Sheet</th><th>Cột</th></tr>
+      <tr><td><b>mẫu tuần</b></td><td><code>mã</code> · <code>tên</code> · <code>giá</code> · <code>số bông</code> · <code>file_anh</code> (URL) · <code>dịp</code> · <code>ghi_chú</code></td></tr>
+      <tr><td><b>nội dung</b></td><td><code>ngày</code> · <code>giờ</code> · <code>caption</code> · <code>file_anh</code> · <code>trạng thái</code> · <code>post_id</code></td></tr>
+    </table>
+
+    <div class="say">Mẹo kiểm soát AI: <b>bắt nó chỉ dùng số nằm trong sheet</b>, và cho caption tối đa <b>300 ký tự</b> — vừa đủ để sau này đăng chéo lên Threads (giới hạn 500) mà không phải viết lại.</div>
+  </section>
+
+  <!-- 2 -->
+  <section id="s2">
+    <h2><span class="num">2</span> Nghiệm thu</h2>
+    <p class="lead">Bốn dòng đầu là bắt buộc — tick khi nó đúng thật.</p>
+
+    <label class="check"><input type="checkbox" data-count><span class="box"></span>
+      <span class="txt">7 caption được sinh, <b>mỗi cái khác nhau</b>, có <b>lời mời đặt hàng</b>, ≤ 300 ký tự</span></label>
+
+    <label class="check"><input type="checkbox" data-count><span class="box"></span>
+      <span class="txt">Giá trong caption <b>khớp đúng</b> giá trong sheet — không có con số nào tự xuất hiện</span></label>
+
+    <label class="check"><input type="checkbox" data-count><span class="box"></span>
+      <span class="txt">9:00 Page có bài, <b>ảnh + caption</b> đúng dòng đến hạn; chạy lại <b>không đăng trùng</b></span></label>
+
+    <label class="check"><input type="checkbox" data-count><span class="box"></span>
+      <span class="txt">Ngày <b>không có dòng nào</b> đến hạn → không đăng gì, không báo lỗi</span></label>
+
+    <label class="check opt"><input type="checkbox"><span class="box"></span>
+      <span class="txt">Sửa giá trong caption thành số sai → workflow <b>chặn không đăng</b> <span class="tag">tuỳ chọn</span></span></label>
+  </section>
+
+  <!-- 3 -->
+  <section id="s3">
+    <h2><span class="num">3</span> Nhờ AI đúng cách</h2>
+    <p class="lead">Dán vào AI theo đúng thứ tự. Câu <b>⓪ làm trước tiên</b> — chưa kiểm tra kết nối thì mọi câu sau đều vô nghĩa.</p>
+
+    <div class="prompt">
+      <div class="p-head"><span class="p-num">⓪</span><h4>Kiểm tra n8n MCP</h4><button class="copy" data-copy>Copy</button></div>
+      <pre class="p-text">Kiểm tra kết nối n8n MCP giúp tôi: gọi công cụ health check, cho tôi biết đang trỏ tới instance nào, phiên bản n8n, và liệt kê 3 workflow gần nhất.</pre>
+    </div>
+
+    <div class="prompt">
+      <div class="p-head"><span class="p-num">①</span><h4>Workflow xưởng caption</h4><button class="copy" data-copy>Copy</button></div>
+      <pre class="p-text">Tôi muốn tạo workflow "xưởng caption" cho shop hoa.
+
+Yêu cầu:
+- Chạy chủ nhật 20:00. Đọc sheet "mẫu tuần".
+- Với mỗi dòng mẫu: gọi AI viết 1 caption Facebook từ chính dữ liệu của dòng đó (tên hoa, giá, số bông, dịp).
+- Giọng: tự nhiên, câu ngắn, không xưng hô với người đọc (caption là bài đăng chung, không phải nhắn riêng một khách).
+- Ràng buộc cho AI: chỉ được dùng giá và số bông có trong dòng dữ liệu, KHÔNG được bịa số; tối đa 300 ký tự; kết thúc bằng lời mời đặt hàng (inbox shop); không dùng từ quá mỹ miều.
+- Ghi kết quả vào sheet "nội dung": ngày (7 ngày tới, mỗi ngày 1 bài), giờ 09:00, caption, file_anh, trạng thái = "chờ đăng".
+
+Input: các dòng trong sheet "mẫu tuần"
+Output: 7 dòng trong sheet "nội dung"
+
+Nói rõ mỗi node làm gì, và làm sao để AI không bịa giá.</pre>
+    </div>
+
+    <div class="prompt">
+      <div class="p-head"><span class="p-num">②</span><h4>Workflow máy đăng</h4><button class="copy" data-copy>Copy</button></div>
+      <pre class="p-text">Tôi muốn tạo workflow tự đăng bài lên Facebook Page của shop hoa.
+
+Yêu cầu:
+- Chạy 9:00 sáng mỗi ngày.
+- Đọc sheet "nội dung", lấy các dòng có ngày+giờ đã đến hạn VÀ trạng thái = "chờ đăng".
+- Không có dòng nào thì dừng, không báo lỗi.
+- Đăng lên Page: có file_anh thì dùng Graph API /photos (url công khai + caption), không có ảnh thì /feed (message).
+- Đăng XONG mới ghi trạng thái = "đã đăng" và post_id. Đây là khoá chống đăng trùng.
+- Lỗi thì ghi "lỗi" và nhắn Zalo cho tôi, không thử lại vô hạn.
+
+Input: các dòng trong sheet "nội dung"
+Output: 1 bài trên Page + dòng được cập nhật trạng thái và post_id
+
+Nói rõ mỗi node làm gì, tại sao cần node đó, và node nào có thể bỏ nếu muốn gọn hơn.</pre>
+    </div>
+
+    <div class="prompt">
+      <div class="p-head"><span class="p-num">③</span><h4>Nó chạy sai</h4><button class="copy" data-copy>Copy</button></div>
+      <pre class="p-text">Workflow của tôi đăng trùng bài.
+
+Hiện tượng: bấm Execute workflow lần hai thì Page có thêm 1 bài giống hệt.
+Input mẫu: sheet có 1 dòng trạng thái "chờ đăng", giờ 09:00 hôm nay.
+Output hiện tại: đăng bài thứ hai, dòng đó vẫn ghi "đã đăng" kèm post_id của bài đầu.
+Output tôi muốn: lần chạy thứ hai không đăng gì cả.
+
+Chỉ sửa phần chống trùng, đừng đổi cấu trúc workflow.</pre>
+    </div>
+
+    <div class="prompt">
+      <div class="p-head"><span class="p-num">④</span><h4>AI sửa mà vẫn sai, hoặc sửa xong bạn không hiểu</h4><button class="copy" data-copy>Copy</button></div>
+      <pre class="p-text">Đây là workflow của tôi: [dán nội dung workflow]
+
+Giải thích lại trong 5 câu, và chỉ ra chỗ nào có thể khiến một bài bị đăng hai lần, hoặc khiến AI viết ra giá không có trong sheet.</pre>
+    </div>
+
+    <div class="rule"><b>Luật:</b> dán <b>error nguyên văn</b> + <b>input/output mẫu</b>, đừng chụp màn hình mờ. Và đừng cho AI viết lại cả workflow khi chỉ 1 node sai.</div>
+  </section>
+
+  <!-- 4 -->
+  <section id="s4">
+    <h2><span class="num">4</span> Làm tiếp</h2>
+    <p class="lead">Xong bài chính thì làm tiếp — cùng kỹ năng, chỉ đổi đích đến.</p>
+
+    <div class="next">
+      <div class="next-card">
+        <h3>Đăng chéo lên Threads</h3>
+        <p>Cùng caption đăng thêm Threads. API Threads đi <b>hai bước</b>: tạo container rồi mới publish — khác Facebook một bước.</p>
+        <span class="why">Giới hạn <b>500 ký tự</b> — caption 300 ký tự của bạn vừa đủ, không phải viết lại.</span>
+      </div>
+      <div class="next-card">
+        <h3>Duyệt trước khi đăng</h3>
+        <p>8:00 gửi ảnh + caption qua Zalo cho bạn, bạn nhắn “OK” thì 9:00 mới đăng. Thêm bước <b>chờ duyệt → đã duyệt</b>.</p>
+        <span class="why">Cách an toàn nhất khi mới cho máy viết và đăng thay mình.</span>
+      </div>
+      <div class="next-card">
+        <h3>Đo bài nào hiệu quả</h3>
+        <p>24 giờ sau, lấy lượt tiếp cận + cảm xúc + bình luận của từng post_id, ghi vào sổ.</p>
+        <span class="why">Sau 2 tuần bạn biết giờ nào đăng, mẫu nào khách thích — và biết giọng AI viết có ăn khách không.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 -->
+  <section id="s5">
+    <h2><span class="num">5</span> Thuật ngữ</h2>
+
+    <div class="terms">
+      <div class="term"><b>pages_manage_posts</b><span>Quyền đăng bài thay Page. Thiếu là lỗi quyền, không phải lỗi code.</span></div>
+      <div class="term"><b>/photos vs /feed</b><span>Có ảnh thì đi đường <code>/photos</code>, chỉ chữ thì <code>/feed</code>.</span></div>
+      <div class="term"><b>post_id</b><span>Mã Facebook trả về sau khi đăng — bằng chứng bài đã lên thật.</span></div>
+      <div class="term"><b>Bịa số</b><span>AI tự nghĩ ra giá/số bông. Chặn bằng cách chỉ đưa số từ sheet và kiểm tra lại.</span></div>
+      <div class="term"><b>Giọng (tone)</b><span>Một câu mô tả cách nói — đủ để AI viết. Không cần caption mẫu.</span></div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="budget">✦ Chúc Page bạn sáng nào cũng có bài mới, viết đúng giọng bạn, trong khi bạn còn đang pha cà phê.</div>
+    <div>Buổi 7 / 8 · Page tự viết &amp; tự đăng</div>
+  </footer>
+</div>
+
+<div class="toast" id="toast">Đủ nghiệm thu 🎉</div>
+
+<script>
+  var boxes = Array.prototype.slice.call(document.querySelectorAll('[data-count]'));
+  var key = 's7-page-viet-dang';
+  var fill = document.getElementById('pfill');
+  var ptxt = document.getElementById('ptxt');
+  var toast = document.getElementById('toast');
+  var wasFull = false;
+
+  try {
+    var saved = JSON.parse(localStorage.getItem(key) || '[]');
+    saved.forEach(function (v, i) { if (v && boxes[i]) boxes[i].checked = true; });
+  } catch (e) {}
+
+  function update() {
+    var done = boxes.filter(function (b) { return b.checked; }).length;
+    fill.style.width = (boxes.length ? Math.round(done / boxes.length * 100) : 0) + '%';
+    ptxt.textContent = done + ' / ' + boxes.length + ' nghiệm thu';
+    var full = done === boxes.length && boxes.length > 0;
+    if (full && !wasFull) { toast.classList.add('on'); setTimeout(function () { toast.classList.remove('on'); }, 2600); }
+    wasFull = full;
+    try { localStorage.setItem(key, JSON.stringify(boxes.map(function (b) { return b.checked; }))); } catch (e) {}
+  }
+  boxes.forEach(function (b) { b.addEventListener('change', update); });
+  update();
+
+  function fallbackCopy(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); } catch (e) {}
+    document.body.removeChild(ta);
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('[data-copy]'), function (btn) {
+    btn.addEventListener('click', function () {
+      var text = btn.closest('.prompt').querySelector('.p-text').innerText;
+      var ok = function () {
+        btn.textContent = 'Đã copy ✓'; btn.classList.add('ok');
+        setTimeout(function () { btn.textContent = 'Copy'; btn.classList.remove('ok'); }, 1700);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(ok).catch(function () { fallbackCopy(text); ok(); });
+      } else { fallbackCopy(text); ok(); }
+    });
+  });
+
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { threshold: 0.12 });
+    Array.prototype.forEach.call(document.querySelectorAll('section'), function (s) { io.observe(s); });
+  } else {
+    Array.prototype.forEach.call(document.querySelectorAll('section'), function (s) { s.classList.add('in'); });
+  }
+</script>
+</body>
+</html>
