@@ -1,0 +1,506 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Buổi 8 — Bảng tin 8 giờ sáng</title>
+<style>
+  :root{
+    --bg:#080b14; --ink:#e9eeff; --muted:#93a3c6;
+    --fb:#1877f2; --sky:#38bdf8; --emerald:#34d399; --amber:#fbbf24; --rose:#fb7185; --violet:#a78bfa;
+    --card:rgba(255,255,255,.045); --line:rgba(255,255,255,.10);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; background:var(--bg); color:var(--ink); padding:0 18px 90px;
+    font-family:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+    line-height:1.62; -webkit-font-smoothing:antialiased;
+  }
+  body::before{
+    content:""; position:fixed; inset:0; z-index:0; pointer-events:none;
+    background:
+      radial-gradient(900px 620px at 8% -12%, rgba(251,191,36,.20), transparent 62%),
+      radial-gradient(820px 520px at 96% -4%, rgba(167,139,250,.18), transparent 60%),
+      radial-gradient(760px 620px at 50% 112%, rgba(52,211,153,.12), transparent 62%);
+  }
+  .wrap{max-width:960px; margin:0 auto; position:relative; z-index:1}
+
+  header{padding:46px 0 10px}
+  .kicker{display:inline-flex; align-items:center; gap:9px; font-size:12.5px; letter-spacing:.16em;
+    text-transform:uppercase; color:#fde9c0; padding:7px 14px; border-radius:999px;
+    border:1px solid rgba(251,191,36,.5); background:linear-gradient(90deg,rgba(251,191,36,.20),rgba(167,139,250,.14))}
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--amber);box-shadow:0 0 0 4px rgba(251,191,36,.16);animation:pulse 2.4s infinite}
+  @keyframes pulse{50%{box-shadow:0 0 0 8px rgba(251,191,36,0)}}
+  h1{font-size:clamp(32px,5.6vw,54px); line-height:1.05; letter-spacing:-.03em; margin:18px 0 12px;
+    background:linear-gradient(100deg,#fff 6%,#fde68a 40%,#c4b5fd 78%,#fff 100%);
+    -webkit-background-clip:text; background-clip:text; color:transparent}
+  .tagline{max-width:690px; margin:0 0 24px; font-size:16px; line-height:1.65; color:#c9d6ee}
+  .tagline b{color:#fcd34d; font-weight:700}
+
+  .hero-grid{display:grid; gap:14px; grid-template-columns:1.5fr 1fr}
+  @media(max-width:760px){.hero-grid{grid-template-columns:1fr}}
+  .product{position:relative; border-radius:20px; padding:22px 24px; overflow:hidden;
+    background:linear-gradient(135deg,rgba(251,191,36,.16),rgba(167,139,250,.12) 60%,rgba(255,255,255,.03));
+    border:1px solid rgba(251,191,36,.38);
+    box-shadow:0 22px 60px -30px rgba(251,191,36,.7), inset 0 1px 0 rgba(255,255,255,.10)}
+  .product::after{content:""; position:absolute; inset:-40% -30% auto auto; width:260px; height:260px; border-radius:50%;
+    background:radial-gradient(circle,rgba(167,139,250,.32),transparent 65%); filter:blur(12px)}
+  .label{font-size:11.5px; letter-spacing:.18em; text-transform:uppercase; color:#fde9c0; margin-bottom:8px; display:block}
+  .product p{margin:0; font-size:clamp(17px,2.3vw,20px); font-weight:600; color:#fff; position:relative; z-index:1}
+  .product b{color:#fcd34d; font-weight:800}
+  .submit{border-radius:20px; padding:20px; display:flex; gap:13px; align-items:flex-start;
+    background:linear-gradient(150deg,rgba(52,211,153,.16),rgba(52,211,153,.04));
+    border:1px solid rgba(52,211,153,.42); box-shadow:0 20px 50px -34px rgba(52,211,153,.9)}
+  .submit .ico{font-size:22px; line-height:1.1}
+  .submit .label{color:#a7f3d0}
+  .submit p{margin:0; font-size:14.5px; color:#e8fff5}
+  .submit strong{color:#6ee7b7}
+
+  .bar{position:sticky; top:0; z-index:20; margin:26px 0 4px; padding:11px 0;
+    background:linear-gradient(180deg,rgba(8,11,20,.94),rgba(8,11,20,.72));
+    backdrop-filter:blur(14px); border-bottom:1px solid rgba(255,255,255,.06)}
+  .bar-in{display:flex; align-items:center; gap:14px; max-width:960px; margin:0 auto; padding:0 2px}
+  .bar span{font-size:12.5px; color:var(--muted); white-space:nowrap; font-variant-numeric:tabular-nums}
+  .track{flex:1; height:6px; border-radius:99px; background:rgba(255,255,255,.09); overflow:hidden}
+  .track i{display:block; height:100%; width:0; border-radius:99px; transition:width .45s cubic-bezier(.22,1,.36,1);
+    background:linear-gradient(90deg,var(--amber),var(--violet))}
+  .print{border:1px solid var(--line); background:rgba(255,255,255,.05); color:var(--muted); font:inherit; font-size:12px; padding:6px 12px; border-radius:99px; cursor:pointer}
+  .print:hover{color:#fff; border-color:rgba(255,255,255,.3)}
+
+  section{position:relative; margin:26px 0; padding:26px 26px 28px; border-radius:22px;
+    background:var(--card); border:1px solid var(--line);
+    opacity:0; transform:translateY(16px); transition:opacity .55s ease, transform .55s cubic-bezier(.22,1,.36,1)}
+  section.in{opacity:1; transform:none}
+  section::before{content:""; position:absolute; left:0; top:22px; bottom:22px; width:3px; border-radius:99px; background:var(--acc)}
+  section h2{display:flex; align-items:center; gap:12px; font-size:12.5px; letter-spacing:.16em; text-transform:uppercase; margin:0 0 16px; color:#cdd7f0}
+  .num{display:grid; place-items:center; width:30px; height:30px; border-radius:10px; font-size:14px; font-weight:800;
+    color:#06101f; background:var(--acc); letter-spacing:0}
+  .lead{color:#dbe3f7; margin:0 0 14px; font-size:15.5px}
+  #s0{--acc:var(--rose)} #s1{--acc:var(--amber)} #s2{--acc:var(--emerald)} #s3{--acc:var(--sky)} #s4{--acc:var(--violet)} #s5{--acc:var(--amber)} #s6{--acc:var(--violet)}
+
+  code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:12.8px;
+    background:rgba(251,191,36,.14); color:#fde68a; padding:2px 6px; border-radius:6px}
+  .setup{margin-top:6px; padding:18px 20px; border-radius:16px;
+    background:rgba(251,191,36,.06); border:1px solid rgba(251,191,36,.26)}
+  .setup h3{margin:0 0 4px; font-size:15.5px; color:#fde9c0}
+  .setup .sub{margin:0 0 10px; font-size:13px; color:var(--muted)}
+  ol.steps{margin:0; padding-left:22px}
+  ol.steps li{margin-bottom:10px; font-size:14.6px; color:#e2e8f8}
+  ol.steps li b{color:#fff}
+  .hint{margin:12px 0 0; padding:11px 14px; border-radius:12px; font-size:13.6px;
+    background:rgba(56,189,248,.07); border:1px dashed rgba(56,189,248,.30); color:#dff4ff}
+  .danger{margin:0 0 16px; padding:16px 18px; border-radius:16px; display:flex; gap:12px; font-size:14.4px;
+    background:rgba(251,113,133,.10); border:1px solid rgba(251,113,133,.42); color:#ffe4e9}
+  .danger .i{font-size:20px; line-height:1.15}
+  .danger b{color:#fff}
+
+  table{width:100%; border-collapse:collapse; font-size:14px; margin-top:6px}
+  th{text-align:left; font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:#8fa3c8; padding:8px 10px; border-bottom:1px solid rgba(255,255,255,.10)}
+  td{padding:10px; border-bottom:1px solid rgba(255,255,255,.05); vertical-align:top; color:#e4e9ff}
+  tr:last-child td{border-bottom:0}
+  td b{color:#fff}
+
+  .story p{margin:0 0 12px; color:#d8e0f2}
+  .story p:last-child{margin-bottom:0}
+  .bubble{display:inline-block; padding:7px 13px; border-radius:14px 14px 14px 4px; background:rgba(255,255,255,.07);
+    border:1px solid rgba(255,255,255,.08); font-size:13.8px; margin:3px 4px 3px 0; color:#e9eefb}
+  .hard{margin-top:16px; padding:14px 16px; border-radius:14px; font-size:14.6px;
+    background:rgba(251,113,133,.10); border:1px dashed rgba(251,113,133,.45); color:#ffe4e9}
+  .hard b{color:#fb7185}
+  .say{margin:14px 0 0; padding:14px 16px; border-radius:14px; font-size:14.4px;
+    background:rgba(52,211,153,.08); border-left:3px solid var(--emerald); color:#d9ffe9}
+  .say b{color:#6ee7b7}
+  .reuse{margin:0 0 14px; padding:12px 15px; border-radius:12px; font-size:14.2px;
+    background:rgba(167,139,250,.09); border:1px dashed rgba(167,139,250,.35); color:#e9e1ff}
+  .reuse b{color:#c4b5fd}
+
+  .phone{margin:8px 0 4px; padding:18px 20px; border-radius:18px; max-width:430px;
+    background:linear-gradient(160deg,rgba(52,211,153,.13),rgba(255,255,255,.03));
+    border:1px solid rgba(52,211,153,.35); box-shadow:0 20px 50px -32px rgba(52,211,153,.8)}
+  .phone .from{font-size:11.5px; letter-spacing:.14em; text-transform:uppercase; color:#a7f3d0; margin-bottom:10px}
+  .phone p{margin:0 0 6px; font-size:14.6px; color:#f0fff8}
+  .phone p:last-child{margin-bottom:0}
+  .phone b{color:#6ee7b7}
+
+  .flow{display:grid; gap:10px; grid-template-columns:1fr auto 1fr; align-items:center; margin:16px 0 6px}
+  @media(max-width:700px){.flow{grid-template-columns:1fr}}
+  .flow .box2{padding:14px 16px; border-radius:14px; background:rgba(251,191,36,.08); border:1px solid rgba(251,191,36,.28); font-size:14px; color:#dfe5ff}
+  .flow .box2 b{display:block; color:#fde68a; font-size:14.5px; margin-bottom:3px}
+  .flow .arw{font-size:20px; color:var(--violet); text-align:center}
+
+  .check{display:flex; gap:13px; align-items:flex-start; padding:13px 15px; margin-bottom:9px; border-radius:14px;
+    background:rgba(255,255,255,.028); border:1px solid rgba(255,255,255,.07); cursor:pointer;
+    transition:background .2s, border-color .2s}
+  .check:hover{background:rgba(52,211,153,.07); border-color:rgba(52,211,153,.28)}
+  .check input{position:absolute; opacity:0; width:0; height:0}
+  .box{flex:0 0 22px; width:22px; height:22px; margin-top:2px; border-radius:7px; border:2px solid rgba(255,255,255,.26);
+    display:grid; place-items:center; transition:all .2s; background:rgba(255,255,255,.03)}
+  .box::after{content:"✓"; font-size:13px; font-weight:900; color:#04150f; opacity:0; transform:scale(.5); transition:all .18s}
+  .check input:checked + .box{background:var(--emerald); border-color:var(--emerald); box-shadow:0 0 0 4px rgba(52,211,153,.16)}
+  .check input:checked + .box::after{opacity:1; transform:scale(1)}
+  .check input:checked ~ .txt{color:#8b97b8; text-decoration:line-through; text-decoration-color:rgba(52,211,153,.6)}
+  .txt{font-size:15px; color:#e4e9ff; transition:color .2s}
+  .opt .txt{color:#b9c1e4}
+  .tag{font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; color:#fbbf24; border:1px solid rgba(251,191,36,.4); padding:2px 7px; border-radius:99px; margin-left:6px}
+
+  .prompt{border-radius:16px; border:1px solid rgba(56,189,248,.20); background:rgba(56,189,248,.045); margin-bottom:13px; overflow:hidden}
+  .p-head{display:flex; align-items:center; gap:11px; padding:12px 15px; background:rgba(56,189,248,.07); border-bottom:1px solid rgba(56,189,248,.14)}
+  .p-num{font-size:17px; color:var(--sky); font-weight:800}
+  .p-head h4{margin:0; font-size:14.5px; color:#ddf5ff; font-weight:700; flex:1}
+  .copy{border:1px solid rgba(56,189,248,.4); background:rgba(56,189,248,.12); color:#bae6fd; font:inherit;
+    font-size:12px; padding:5px 12px; border-radius:99px; cursor:pointer; transition:.2s; white-space:nowrap}
+  .copy:hover{background:rgba(56,189,248,.24); color:#fff}
+  .copy.ok{background:var(--emerald); border-color:var(--emerald); color:#04150f; font-weight:700}
+  pre.p-text{margin:0; padding:15px; font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    font-size:13px; line-height:1.72; color:#dbe6ff; white-space:pre-wrap; word-break:break-word}
+  .rule{margin-top:16px; padding:14px 16px; border-radius:14px; font-size:14.2px;
+    background:linear-gradient(90deg,rgba(56,189,248,.12),transparent); border-left:3px solid var(--sky); color:#e6f9ff}
+  .rule b{color:#bae6fd}
+
+  .next{display:grid; gap:12px; grid-template-columns:1fr 1fr 1fr}
+  @media(max-width:820px){.next{grid-template-columns:1fr}}
+  .next-card{padding:18px; border-radius:16px; background:rgba(167,139,250,.06); border:1px solid rgba(167,139,250,.26); transition:transform .2s, border-color .2s, background .2s}
+  .next-card:hover{transform:translateY(-3px); border-color:rgba(167,139,250,.55); background:rgba(167,139,250,.10)}
+  .next-card h3{margin:0 0 6px; font-size:15.5px; color:#d6c8ff}
+  .next-card p{margin:0; font-size:14px; color:#dfe5ff}
+  .next-card .why{display:block; margin-top:8px; font-size:12.6px; color:#a9b6d8; border-top:1px dashed rgba(255,255,255,.12); padding-top:7px}
+
+  .rite{counter-reset:r}
+  .rite-item{display:flex; gap:14px; padding:15px 0; border-bottom:1px dashed rgba(255,255,255,.10)}
+  .rite-item:last-child{border-bottom:0}
+  .rite-item .n{flex:0 0 30px; height:30px; border-radius:50%; display:grid; place-items:center;
+    background:rgba(251,191,36,.18); border:1px solid rgba(251,191,36,.45); color:#fde68a; font-weight:800; font-size:14px}
+  .rite-item div{flex:1}
+  .rite-item b{display:block; color:#fff; font-size:15px; margin-bottom:2px}
+  .rite-item span{font-size:14px; color:#ccd4ec}
+
+  .terms{display:grid; gap:10px; grid-template-columns:1fr 1fr}
+  @media(max-width:700px){.terms{grid-template-columns:1fr}}
+  .term{padding:14px 16px; border-radius:14px; background:rgba(167,139,250,.06); border:1px solid rgba(167,139,250,.22)}
+  .term b{display:block; color:#c4b5fd; font-size:14px; margin-bottom:3px}
+  .term span{font-size:13.6px; color:#dfe5ff}
+
+  footer{margin-top:34px; text-align:center; color:#7d87ae; font-size:13px}
+  .budget{display:inline-block; margin-bottom:12px; padding:9px 18px; border-radius:99px;
+    background:rgba(251,191,36,.12); border:1px solid rgba(251,191,36,.38); color:#fde9c0; font-size:13.5px}
+
+  .toast{position:fixed; left:50%; bottom:26px; transform:translate(-50%,20px); opacity:0; pointer-events:none;
+    background:linear-gradient(90deg,var(--amber),var(--violet)); color:#1a1206; font-weight:800; font-size:13.5px;
+    padding:11px 22px; border-radius:99px; transition:.35s cubic-bezier(.22,1,.36,1); z-index:50;
+    box-shadow:0 18px 40px -18px rgba(251,191,36,.9)}
+  .toast.on{opacity:1; transform:translate(-50%,0)}
+
+  @media print{
+    body{background:#fff; color:#111; padding:0}
+    body::before{display:none}
+    .bar,.copy,.print,.toast{display:none}
+    section{opacity:1; transform:none; border:1px solid #ddd; background:#fff; break-inside:avoid}
+    h1{color:#111; -webkit-text-fill-color:#111}
+    .product,.submit,.phone{background:#f6f7fa; border:1px solid #ddd}
+    .product p,.submit p,.story p,.txt,.lead,.next-card p,.term span,td,th,.phone p,.rite-item span{color:#111}
+    pre.p-text{color:#111; background:#f7f7fa}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="kicker"><span class="dot"></span> Buổi 8 / 8 · Khoá n8n</div>
+    <h1>Bảng tin<br>8 giờ sáng</h1>
+    <p class="tagline">Bảy buổi trước bạn dựng máy. Hôm nay bạn dạy nó <b>tự báo cáo</b> — để nếu nó chết, bạn biết trước khi khách biết.</p>
+
+    <div class="hero-grid">
+      <div class="product">
+        <span class="label">Sản phẩm cuối buổi</span>
+        <p>8:00 sáng, <b>một tin Zalo</b>: hôm qua bán được bao nhiêu, bao nhiêu khách đang chờ, <b>workflow nào chết</b>.</p>
+      </div>
+      <div class="submit">
+        <div class="ico">🎓</div>
+        <div>
+          <span class="label">Hôm nay nộp</span>
+          <p>Ảnh tin bảng tin thật + error workflow chạy được + <strong>sổ tay 1 trang</strong> đã bàn giao cho người khác đọc.</p>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="bar">
+    <div class="bar-in">
+      <span id="ptxt">0 / 5 nghiệm thu</span>
+      <div class="track"><i id="pfill"></i></div>
+      <button class="print" onclick="window.print()">In</button>
+    </div>
+  </div>
+
+  <!-- 0 -->
+  <section id="s0" class="in">
+    <h2><span class="num">0</span> Chuẩn bị: ba nguồn số</h2>
+
+    <p class="lead">Bảng tin chỉ là chỗ <b>đọc lại</b> những gì bạn đã ghi ở các buổi trước. Thiếu sổ là thiếu số.</p>
+
+    <table>
+      <tr><th>Nguồn</th><th>Có từ buổi</th><th>Cần cột gì</th></tr>
+      <tr><td><b>Sổ đơn</b></td><td>4 – 5</td><td>ngày · khách · món · số tiền · trạng thái (mới / đã giao / huỷ)</td></tr>
+      <tr><td><b>Log tin nhắn</b></td><td>5 – 6</td><td>thời gian · kênh (Zalo / Page) · nội dung · có chuyển người không</td></tr>
+      <tr><td><b>Sổ lỗi</b></td><td>hôm nay</td><td>thời gian · tên workflow · node · thông điệp lỗi</td></tr>
+    </table>
+
+    <div class="setup">
+      <h3>Error workflow — gom về một chỗ (15 phút)</h3>
+      <p class="sub">Buổi 6–7 bạn đã cho mỗi workflow <b>tự nhắn Zalo khi lỗi</b>. Giờ gom hết về một chỗ: sáu cái chuông riêng thì không ai nghe, và workflow bị tắt thì chuông của nó cũng tắt theo.</p>
+      <ol class="steps">
+        <li>Tạo workflow mới chỉ có <b>Error Trigger</b> (node bắt lỗi).</li>
+        <li>Nối vào <b>Google Sheets → append</b> sổ lỗi: thời gian, tên workflow, node, thông điệp.</li>
+        <li>Mở từng workflow đang chạy → <b>Settings → Error Workflow</b> → chọn workflow vừa tạo.</li>
+      </ol>
+      <p class="hint"><b>Ai cũng quên bước 3.</b> Tạo error workflow xong mà không gán vào từng workflow thì nó không bắt được gì cả — và bạn sẽ tưởng hệ thống đang khoẻ. Đã dựng sẵn từ buổi 7 thì <b>bỏ qua bước 1–2, chỉ làm bước 3</b>.</p>
+    </div>
+
+    <div class="danger">
+      <span class="i">⚠️</span>
+      <div><b>Lỗi nguy hiểm nhất là lỗi không xảy ra.</b> Workflow bị tắt, cron không chạy, token hết hạn im lặng — <b>không có lỗi nào để bắt</b>. Vì vậy hôm nay có thêm phần “điểm danh” ở mục Làm tiếp: máy phải tự nói “tôi vẫn sống”.</div>
+    </div>
+  </section>
+
+  <!-- 1 -->
+  <section id="s1">
+    <h2><span class="num">1</span> Đề bài</h2>
+    <div class="story">
+      <p>Bạn đi công tác 2 ngày. Về mở điện thoại: 4 khách hỏi hoa không ai trả lời, và một workflow đã chết từ hôm kia. Không có thông báo nào.</p>
+      <p>Bạn dựng <b>một bảng tin duy nhất</b> mỗi sáng — không phải mở n8n, không phải mở 3 cái sheet:</p>
+
+      <div class="phone">
+        <div class="from">Zalo · 8:00 sáng</div>
+        <p>☀️ <b>Hôm qua:</b> 7 đơn · 3.150.000đ</p>
+        <p>💬 12 tin khách · 2 tin chuyển người</p>
+        <p>⚠️ <b>1 workflow lỗi:</b> “Page tự trả lời” — node Gửi tin nhắn</p>
+        <p>📌 <b>Hôm nay:</b> 3 đơn chưa giao · 1 khách chờ báo giá</p>
+      </div>
+
+      <p style="margin-top:14px">Hai thứ phải dựng: <b>bảng tin 8:00</b> và <b>error workflow</b> nuôi số liệu cho nó.</p>
+
+      <p class="hint"><b>Thứ tự: error workflow trước (15 phút), bảng tin sau.</b> Gán error workflow cho các workflow cũ (buổi 5–7) ngay — nhưng <b>chưa gán cho chính bảng tin</b> cho tới khi bảng tin chạy đúng số. Gán sớm thì mỗi lần sửa thử là một dòng lỗi rác chui vào sổ.</p>
+      <div class="hard">Hai chỗ khó: (1) đếm đúng — lọc theo <b>ngày hôm qua</b> và <b>múi giờ Việt Nam</b>, đừng để lệch một ngày; (2) <b>workflow không chạy thì không có lỗi để bắt</b> — im lặng không có nghĩa là khoẻ.</div>
+    </div>
+
+    <div class="say">Luật của bảng tin: <b>ngày không có đơn vẫn phải báo “0 đơn”</b>. Một tin “0 đơn” là bằng chứng máy còn sống; không có tin nào là dấu hiệu máy đã chết.</div>
+  </section>
+
+  <!-- 2 -->
+  <section id="s2">
+    <h2><span class="num">2</span> Nghiệm thu</h2>
+    <p class="lead">Bốn dòng đầu là bắt buộc — tick khi nó đúng thật.</p>
+
+    <label class="check"><input type="checkbox" data-count><span class="box"></span>
+      <span class="txt">8:00 sáng có <b>đúng một tin</b>, đủ 4 số: đơn · doanh thu · tin khách · lỗi</span></label>
+
+    <label class="check"><input type="checkbox" data-count><span class="box"></span>
+      <span class="txt">Số trong tin <b>khớp khi bạn đếm tay</b> sổ của hôm qua</span></label>
+
+    <label class="check"><input type="checkbox" data-count><span class="box"></span>
+      <span class="txt">Ngày không có đơn → vẫn báo <b>“0 đơn”</b>, không im lặng</span></label>
+
+    <label class="check"><input type="checkbox" data-count><span class="box"></span>
+      <span class="txt">Cố tình làm lỗi 1 workflow → sáng hôm sau <b>tên nó hiện trong bảng tin</b></span></label>
+
+    <label class="check"><input type="checkbox" data-count><span class="box"></span>
+      <span class="txt"><b>Người khác</b> đọc workflow 60 giây, nói được: làm gì · chạy lúc nào · hỏng báo ai</span></label>
+
+    <label class="check opt"><input type="checkbox"><span class="box"></span>
+      <span class="txt">Có thêm mục <b>“việc hôm nay”</b>: đơn chưa giao, khách chờ trả lời <span class="tag">tuỳ chọn</span></span></label>
+  </section>
+
+  <!-- 3 -->
+  <section id="s3">
+    <h2><span class="num">3</span> Nhờ AI đúng cách</h2>
+    <p class="lead">Dán vào AI theo đúng thứ tự: <b>error workflow trước</b> (câu ①), rồi mới tới bảng tin (câu ②) — vì bảng tin cần sổ lỗi để đọc. Câu <b>⓪ làm trước tiên</b>: chưa kiểm tra kết nối thì mọi câu sau đều vô nghĩa.</p>
+
+    <div class="prompt">
+      <div class="p-head"><span class="p-num">⓪</span><h4>Kiểm tra n8n MCP</h4><button class="copy" data-copy>Copy</button></div>
+      <pre class="p-text">Kiểm tra kết nối n8n MCP giúp tôi: gọi công cụ health check, cho tôi biết đang trỏ tới instance nào, phiên bản n8n, và liệt kê 3 workflow gần nhất.</pre>
+    </div>
+
+    <div class="prompt">
+      <div class="p-head"><span class="p-num">①</span><h4>Error workflow</h4><button class="copy" data-copy>Copy</button></div>
+      <pre class="p-text">Tôi muốn tạo workflow bắt lỗi cho toàn bộ workflow của mình.
+
+Yêu cầu:
+- Dùng node Error Trigger làm điểm bắt đầu.
+- Ghi vào sheet "lỗi": thời gian, tên workflow bị lỗi, tên node, thông điệp lỗi, link tới execution nếu có.
+- Không gửi Zalo riêng cho từng lỗi (sẽ spam) — chỉ ghi sổ, để workflow "bảng tin sáng" đọc lại.
+
+Input: lỗi từ bất kỳ workflow nào
+Output: 1 dòng trong sheet lỗi
+
+Nói rõ tôi phải làm gì để mọi workflow đều gửi lỗi về đây.</pre>
+    </div>
+
+    <div class="prompt">
+      <div class="p-head"><span class="p-num">②</span><h4>Bảng tin 8:00</h4><button class="copy" data-copy>Copy</button></div>
+      <pre class="p-text">Tôi muốn tạo workflow "bảng tin sáng" gửi Zalo cho chủ shop hoa lúc 8:00 mỗi ngày.
+
+Yêu cầu:
+- Đọc sổ đơn (Google Sheets): tính số đơn và tổng tiền của NGÀY HÔM QUA, bỏ các đơn trạng thái "huỷ".
+- Đọc log tin nhắn: đếm số tin khách hôm qua và số tin đã chuyển người.
+- Đọc sổ lỗi: lấy các dòng lỗi trong 24 giờ qua, gộp theo tên workflow.
+- Ghép thành MỘT tin Zalo nhiều dòng: đơn + doanh thu, tin khách + chuyển người, danh sách workflow lỗi, và mục "việc hôm nay" (đơn chưa giao, khách chờ báo giá).
+- Ngày không có đơn vẫn phải gửi tin với "0 đơn". Không bao giờ im lặng.
+- Dùng đúng múi giờ Asia/Ho_Chi_Minh khi xác định "hôm qua".
+
+Input: 3 sheet (đơn, log tin, lỗi)
+Output: 1 tin Zalo + 1 dòng log là "đã gửi bảng tin"
+
+Nói rõ mỗi node làm gì, và làm sao để không bị lệch ngày do múi giờ.</pre>
+    </div>
+
+    <div class="prompt">
+      <div class="p-head"><span class="p-num">③</span><h4>Nó chạy sai</h4><button class="copy" data-copy>Copy</button></div>
+      <pre class="p-text">Bảng tin của tôi báo sai số.
+
+Input mẫu: sổ đơn có 8 đơn hôm qua, trong đó 1 đơn trạng thái "huỷ", tổng tiền 3.450.000đ
+Output hiện tại: bảng tin báo "8 đơn · 3.450.000đ"
+Output tôi muốn: "7 đơn · 3.150.000đ" (đã bỏ đơn huỷ)
+
+Chỉ sửa phần tính số, đừng đổi cấu trúc workflow.</pre>
+    </div>
+
+    <div class="prompt">
+      <div class="p-head"><span class="p-num">④</span><h4>AI sửa mà vẫn sai, hoặc sửa xong bạn không hiểu</h4><button class="copy" data-copy>Copy</button></div>
+      <pre class="p-text">Đây là workflow của tôi: [dán nội dung workflow]
+
+Giải thích lại trong 5 câu, và chỉ ra chỗ nào có thể khiến bảng tin báo sai số hoặc bị lệch ngày.</pre>
+    </div>
+
+    <div class="rule"><b>Luật:</b> dán <b>error nguyên văn</b> + <b>input/output mẫu</b>, đừng chụp màn hình mờ. Và đừng cho AI viết lại cả workflow khi chỉ 1 node sai.</div>
+  </section>
+
+  <!-- 4 -->
+  <section id="s4">
+    <h2><span class="num">4</span> Làm tiếp</h2>
+    <p class="lead">Ba việc nên làm sau khoá — cái đầu tiên là thứ quan trọng nhất.</p>
+
+    <div class="next">
+      <div class="next-card">
+        <h3>Điểm danh mỗi ngày</h3>
+        <p>Mỗi workflow quan trọng tự ghi “tôi vẫn chạy” vào một sheet. Bảng tin sáng thấy vắng mặt → báo động.</p>
+        <span class="why">Đây là cách duy nhất bắt được lỗi <b>không xảy ra</b>: workflow bị tắt hoặc cron chết.</span>
+      </div>
+      <div class="next-card">
+        <h3>Báo cáo tuần</h3>
+        <p>Chủ nhật: tuần này so với tuần trước — đơn, tiền, kênh nào ra nhiều đơn nhất.</p>
+        <span class="why">Một tin mỗi tuần đủ để bạn thấy xu hướng, không cần mở dashboard.</span>
+      </div>
+      <div class="next-card">
+        <h3>Sao lưu &amp; khôi phục</h3>
+        <p>Xuất workflow ra file mỗi tháng + chép file database của n8n. Thử khôi phục một lần cho biết.</p>
+        <span class="why">Máy chủ mất là mất hết. Bản sao lưu chưa từng thử khôi phục thì không tính là sao lưu.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 -->
+  <section id="s5">
+    <h2><span class="num">5</span> Kết khoá — 10 phút cuối</h2>
+
+    <div class="rite">
+      <div class="rite-item">
+        <div class="n">1</div>
+        <div><b>Dọn workflow chết</b><span>Tắt những workflow không còn dùng. Nhiều workflow rác khiến hệ thống không ai dám sửa.</span></div>
+      </div>
+      <div class="rite-item">
+        <div class="n">2</div>
+        <div><b>Viết sổ tay 1 trang</b><span>Bảng 4 cột: workflow · chạy lúc nào · hỏng thì báo ai · tốn bao nhiêu tiền/tháng. Dán vào chỗ bạn nhìn thấy.</span></div>
+      </div>
+      <div class="rite-item">
+        <div class="n">3</div>
+        <div><b>Bàn giao chéo</b><span>Đưa workflow cho người bên cạnh đọc 60 giây. Họ không nói được nó làm gì = chưa bàn giao được.</span></div>
+      </div>
+      <div class="rite-item">
+        <div class="n">4</div>
+        <div><b>Hẹn 30 ngày sau</b><span>Mở lại bảng tin sáng, xem còn sống không. Đây là bài kiểm tra thật của cả khoá học.</span></div>
+      </div>
+    </div>
+
+    <div class="say"><b>Một câu để mang về:</b> bảy buổi trước bạn dựng máy. Hôm nay bạn dạy nó tự báo cáo — từ mai, nếu nó chết, bạn biết trước khi khách biết.</div>
+  </section>
+
+  <!-- 6 -->
+  <section id="s6">
+    <h2><span class="num">6</span> Thuật ngữ</h2>
+
+    <div class="terms">
+      <div class="term"><b>Error Trigger</b><span>Node bắt lỗi của n8n, chỉ chạy khi có workflow khác chết.</span></div>
+      <div class="term"><b>Error Workflow</b><span>Phải gán trong Settings của từng workflow thì mới có tác dụng.</span></div>
+      <div class="term"><b>Tổng hợp (aggregate)</b><span>Gom nhiều dòng thành một con số — đếm, cộng, nhóm theo ngày.</span></div>
+      <div class="term"><b>Điểm danh (heartbeat)</b><span>Máy tự báo “tôi vẫn chạy”. Vắng mặt = có chuyện.</span></div>
+      <div class="term"><b>Bàn giao</b><span>Người khác đọc hiểu và chạy được mà không cần hỏi bạn.</span></div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="budget">✦ Chúc bạn có một hệ thống sáng nào cũng nhắn tin cho bạn, kể cả khi bạn đang ngủ.</div>
+    <div>Buổi 8 / 8 · Bảng tin 8 giờ sáng</div>
+  </footer>
+</div>
+
+<div class="toast" id="toast">Đủ nghiệm thu 🎉</div>
+
+<script>
+  var boxes = Array.prototype.slice.call(document.querySelectorAll('[data-count]'));
+  var key = 's8-bang-tin-sang';
+  var fill = document.getElementById('pfill');
+  var ptxt = document.getElementById('ptxt');
+  var toast = document.getElementById('toast');
+  var wasFull = false;
+
+  try {
+    var saved = JSON.parse(localStorage.getItem(key) || '[]');
+    saved.forEach(function (v, i) { if (v && boxes[i]) boxes[i].checked = true; });
+  } catch (e) {}
+
+  function update() {
+    var done = boxes.filter(function (b) { return b.checked; }).length;
+    fill.style.width = (boxes.length ? Math.round(done / boxes.length * 100) : 0) + '%';
+    ptxt.textContent = done + ' / ' + boxes.length + ' nghiệm thu';
+    var full = done === boxes.length && boxes.length > 0;
+    if (full && !wasFull) { toast.classList.add('on'); setTimeout(function () { toast.classList.remove('on'); }, 2600); }
+    wasFull = full;
+    try { localStorage.setItem(key, JSON.stringify(boxes.map(function (b) { return b.checked; }))); } catch (e) {}
+  }
+  boxes.forEach(function (b) { b.addEventListener('change', update); });
+  update();
+
+  function fallbackCopy(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); } catch (e) {}
+    document.body.removeChild(ta);
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('[data-copy]'), function (btn) {
+    btn.addEventListener('click', function () {
+      var text = btn.closest('.prompt').querySelector('.p-text').innerText;
+      var ok = function () {
+        btn.textContent = 'Đã copy ✓'; btn.classList.add('ok');
+        setTimeout(function () { btn.textContent = 'Copy'; btn.classList.remove('ok'); }, 1700);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(ok).catch(function () { fallbackCopy(text); ok(); });
+      } else { fallbackCopy(text); ok(); }
+    });
+  });
+
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { threshold: 0.12 });
+    Array.prototype.forEach.call(document.querySelectorAll('section'), function (s) { io.observe(s); });
+  } else {
+    Array.prototype.forEach.call(document.querySelectorAll('section'), function (s) { s.classList.add('in'); });
+  }
+</script>
+</body>
+</html>
