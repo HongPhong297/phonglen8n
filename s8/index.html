@@ -243,12 +243,13 @@
 
     <table>
       <tr><th>Nguồn</th><th>Có từ buổi</th><th>Cần cột gì</th></tr>
-      <tr><td><b>Sổ đơn</b></td><td>4 – 5</td><td>ngày · khách · món · số tiền · trạng thái (mới / đã giao / huỷ)</td></tr>
-      <tr><td><b>Log tin nhắn</b></td><td>5 – 6</td><td>thời gian · kênh (Zalo / Page) · nội dung · có chuyển người không</td></tr>
+      <tr><td><b>Sổ đơn</b></td><td>4</td><td>ngày · khách · mẫu hoa · số lượng · giờ giao · địa chỉ · người nhận · lời chúc — <b>không có cột tiền</b></td></tr>
+      <tr><td><b>Bảng giá</b></td><td>5</td><td>mã mẫu · tên · giá · số bông → dùng để <b>tra giá</b> cho từng đơn</td></tr>
+      <tr><td><b>Log tin nhắn</b></td><td>5 – 6</td><td>thời gian · nội dung (+ quận ở Zalo, hoặc page id ở Page) — <b>không có cột chuyển người</b></td></tr>
       <tr><td><b>Sổ lỗi</b></td><td>hôm nay</td><td>thời gian · tên workflow · node · thông điệp lỗi</td></tr>
     </table>
 
-    <p class="hint"><b>Kiểm tra 5 phút trước khi dựng:</b> sổ đơn đã có cột <code>số tiền</code> và <code>trạng thái</code> chưa? sheet LOG đã có cột <code>kênh</code> và <code>chuyển người</code> chưa? Thiếu thì mở workflow buổi 4–6 thêm <b>1 node Set</b> để ghi cho đủ — đừng nhồi phần bù vào bảng tin, vì bảng tin chỉ <b>đọc</b>, không sửa dữ liệu cũ.</p>
+    <p class="hint"><b>Chỗ bạn sẽ vấp:</b> sổ đơn buổi 4 <b>không có cột tiền</b>, log tin <b>không có cột chuyển người</b>. Không sửa lại bài cũ — bảng tin phải tính từ cái đang có: <b>tiền = số lượng × giá tra trong bảng giá buổi 5</b>, và <b>chuyển người = đếm dòng log có câu chuyển người</b> của shop. Số nào là suy ra thì ghi rõ là <b>ước tính</b>.</p>
 
     <div class="setup">
       <h3>Error workflow — gom về một chỗ (15 phút)</h3>
@@ -276,16 +277,16 @@
 
       <div class="phone">
         <div class="from">Zalo · 8:00 sáng</div>
-        <p>☀️ <b>Hôm qua:</b> 7 đơn · 3.150.000đ</p>
-        <p>💬 12 tin khách · 2 tin chuyển người</p>
+        <p>☀️ <b>Hôm qua:</b> 7 đơn · <b>~3.150.000đ</b> (ước tính)</p>
+        <p>💬 12 tin khách · 2 tin đã chuyển người</p>
         <p>⚠️ <b>1 workflow lỗi:</b> “Page tự trả lời” — node Gửi tin nhắn</p>
-        <p>📌 <b>Hôm nay:</b> 3 đơn chưa giao · 1 khách chờ báo giá</p>
+        <p>📌 <b>Hôm nay giao:</b> 3 đơn (8h · 14h · 19h)</p>
       </div>
 
       <p style="margin-top:14px">Hai thứ phải dựng: <b>bảng tin 8:00</b> và <b>error workflow</b> nuôi số liệu cho nó.</p>
 
       <p class="hint"><b>Thứ tự: error workflow trước (15 phút), bảng tin sau.</b> Gán error workflow cho các workflow cũ (buổi 5–7) ngay — nhưng <b>chưa gán cho chính bảng tin</b> cho tới khi bảng tin chạy đúng số. Gán sớm thì mỗi lần sửa thử là một dòng lỗi rác chui vào sổ.</p>
-      <div class="hard">Hai chỗ khó: (1) đếm đúng — lọc theo <b>ngày hôm qua</b> và <b>múi giờ Việt Nam</b>, đừng để lệch một ngày; (2) <b>workflow không chạy thì không có lỗi để bắt</b> — im lặng không có nghĩa là khoẻ.</div>
+      <div class="hard">Ba chỗ khó: (1) đếm đúng — lọc theo <b>ngày hôm qua</b> và <b>múi giờ Việt Nam</b>, đừng để lệch một ngày; (2) sổ đơn <b>không có tiền</b> — phải tra giá và ghi rõ “ước tính”, đừng để chủ shop tưởng đó là số thật; (3) <b>workflow không chạy thì không có lỗi để bắt</b> — im lặng không có nghĩa là khoẻ.</div>
     </div>
 
     <div class="say">Luật của bảng tin: <b>ngày không có đơn vẫn phải báo “0 đơn”</b>. Một tin “0 đơn” là bằng chứng máy còn sống; không có tin nào là dấu hiệu máy đã chết.</div>
@@ -297,13 +298,13 @@
     <p class="lead">Bốn dòng đầu là bắt buộc — tick khi nó đúng thật.</p>
 
     <label class="check"><input type="checkbox" data-count><span class="box"></span>
-      <span class="txt">8:00 sáng có <b>đúng một tin</b>, đủ 4 số: đơn · doanh thu · tin khách · lỗi</span></label>
+      <span class="txt">8:00 sáng có <b>đúng một tin</b>, đủ 4 số: đơn · tiền · tin khách · lỗi — kể cả ngày <b>0 đơn vẫn báo</b></span></label>
 
     <label class="check"><input type="checkbox" data-count><span class="box"></span>
-      <span class="txt">Số trong tin <b>khớp khi bạn đếm tay</b> sổ của hôm qua</span></label>
+      <span class="txt">Số đơn và số tin khách <b>khớp khi bạn đếm tay</b> sổ của hôm qua</span></label>
 
     <label class="check"><input type="checkbox" data-count><span class="box"></span>
-      <span class="txt">Ngày không có đơn → vẫn báo <b>“0 đơn”</b>, không im lặng</span></label>
+      <span class="txt">Tiền có dấu <b>~</b> và khớp phép nhân: <b>số lượng × giá</b> tra trong bảng giá</span></label>
 
     <label class="check"><input type="checkbox" data-count><span class="box"></span>
       <span class="txt">Cố tình làm lỗi 1 workflow → sáng hôm sau <b>tên nó hiện trong bảng tin</b></span></label>
@@ -312,7 +313,7 @@
       <span class="txt"><b>Người khác</b> đọc workflow 60 giây, nói được: làm gì · chạy lúc nào · hỏng báo ai</span></label>
 
     <label class="check opt"><input type="checkbox"><span class="box"></span>
-      <span class="txt">Có thêm mục <b>“việc hôm nay”</b>: đơn chưa giao, khách chờ trả lời <span class="tag">tuỳ chọn</span></span></label>
+      <span class="txt">Mục <b>“hôm nay giao”</b> liệt kê đúng giờ giao của hôm nay <span class="tag">tuỳ chọn</span></span></label>
   </section>
 
   <!-- 3 -->
@@ -345,26 +346,35 @@ Nói rõ tôi phải làm gì để mọi workflow đều gửi lỗi về đây
       <pre class="p-text">Tôi muốn tạo workflow "bảng tin sáng" gửi Zalo cho chủ shop hoa lúc 8:00 mỗi ngày.
 
 Yêu cầu:
-- Đọc sổ đơn (Google Sheets): tính số đơn và tổng tiền của NGÀY HÔM QUA, bỏ các đơn trạng thái "huỷ".
-- Đọc log tin nhắn: đếm số tin khách hôm qua và số tin đã chuyển người.
-- Đọc sổ lỗi: lấy các dòng lỗi trong 24 giờ qua, gộp theo tên workflow.
-- Ghép thành MỘT tin Zalo nhiều dòng: đơn + doanh thu, tin khách + chuyển người, danh sách workflow lỗi, và mục "việc hôm nay" (đơn chưa giao, khách chờ báo giá).
-- Ngày không có đơn vẫn phải gửi tin với "0 đơn". Không bao giờ im lặng.
+Dữ liệu tôi ĐANG CÓ (không có cột nào khác — đừng giả định thêm):
+- Sổ đơn: ngày, khách, mẫu hoa, số lượng, giờ giao, địa chỉ, người nhận, lời chúc. KHÔNG có cột tiền, KHÔNG có cột trạng thái.
+- Bảng giá: mã mẫu, tên, giá, số bông.
+- Log tin nhắn: thời gian, nội dung (Zalo có thêm quận, Page có thêm page id). KHÔNG có cột "chuyển người".
+- Sổ lỗi: thời gian, tên workflow, node, thông điệp.
+
+Yêu cầu:
+- Số đơn hôm qua: đếm dòng sổ đơn có ngày = hôm qua.
+- Tiền: tra giá theo "mẫu hoa" trong bảng giá, nhân với số lượng, cộng lại. Vì sổ đơn không có cột tiền nên phải ghi là "~ ước tính".
+- Tin khách: đếm dòng log trong ngày; nếu có cột kênh thì tách Zalo / Page, không có thì đếm tổng.
+- Chuyển người: đếm dòng log có chứa câu chuyển người của shop ("chuyển chị chủ shop").
+- Lỗi: lấy dòng sổ lỗi trong 24 giờ qua, gộp theo tên workflow.
+- Hôm nay giao: liệt kê các đơn có giờ giao là hôm nay, kèm giờ.
+- Ngày không có đơn vẫn gửi tin với "0 đơn".
 - Dùng đúng múi giờ Asia/Ho_Chi_Minh khi xác định "hôm qua".
 
-Input: 3 sheet (đơn, log tin, lỗi)
-Output: 1 tin Zalo + 1 dòng log là "đã gửi bảng tin"
+Input: 4 sheet (đơn, bảng giá, log tin, sổ lỗi)
+Output: 1 tin Zalo nhiều dòng
 
-Nói rõ mỗi node làm gì, và làm sao để không bị lệch ngày do múi giờ.</pre>
+Nói rõ mỗi node làm gì, chỗ nào là số ước tính, và làm sao để không lệch ngày do múi giờ.</pre>
     </div>
 
     <div class="prompt">
       <div class="p-head"><span class="p-num">③</span><h4>Nó chạy sai</h4><button class="copy" data-copy>Copy</button></div>
       <pre class="p-text">Bảng tin của tôi báo sai số.
 
-Input mẫu: sổ đơn có 8 đơn hôm qua, trong đó 1 đơn trạng thái "huỷ", tổng tiền 3.450.000đ
-Output hiện tại: bảng tin báo "8 đơn · 3.450.000đ"
-Output tôi muốn: "7 đơn · 3.150.000đ" (đã bỏ đơn huỷ)
+Input mẫu: sổ đơn hôm qua có 8 dòng, trong đó 2 dòng là cùng một đơn bị ghi 2 lần (khách nhắn sửa giờ giao)
+Output hiện tại: bảng tin báo "8 đơn"
+Output tôi muốn: "7 đơn" — và cho tôi biết cách nhận ra dòng trùng (cùng khách + cùng mẫu hoa + cùng giờ giao)
 
 Chỉ sửa phần tính số, đừng đổi cấu trúc workflow.</pre>
     </div>
@@ -437,6 +447,7 @@ Giải thích lại trong 5 câu, và chỉ ra chỗ nào có thể khiến bả
       <div class="term"><b>Error Trigger</b><span>Node bắt lỗi của n8n, chỉ chạy khi có workflow khác chết.</span></div>
       <div class="term"><b>Error Workflow</b><span>Phải gán trong Settings của từng workflow thì mới có tác dụng.</span></div>
       <div class="term"><b>Tổng hợp (aggregate)</b><span>Gom nhiều dòng thành một con số — đếm, cộng, nhóm theo ngày.</span></div>
+      <div class="term"><b>Ước tính</b><span>Số suy ra từ dữ liệu khác (số lượng × giá). Phải ghi dấu ~ để không ai tưởng là số thật.</span></div>
       <div class="term"><b>Điểm danh (heartbeat)</b><span>Máy tự báo “tôi vẫn chạy”. Vắng mặt = có chuyện.</span></div>
       <div class="term"><b>Bàn giao</b><span>Người khác đọc hiểu và chạy được mà không cần hỏi bạn.</span></div>
     </div>

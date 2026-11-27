@@ -285,7 +285,7 @@ Yêu cầu:
 - Lọc bỏ event có message.is_echo = true, để Page không trả lời chính nó.
 - Trả lời bằng AI dựa trên 3 sheet đã có: bảng giá, phí giao (theo quận), FAQ. Không biết → chuyển người.
 - Nếu khách hỏi mẫu thì gửi kèm ảnh (dùng attachment hoặc link ảnh công khai).
-- Ghi log mọi tin vào sheet LOG (dùng chung cho mọi kênh): thời gian, kênh = "Page", nội dung, chuyển người (TRUE/FALSE), page_scoped_id.
+- Ghi log mọi tin vào Sheets, kèm Page-scoped ID của khách.
 - Nếu tin cuối của khách đã quá 24 giờ thì không gửi trả lời, chỉ ghi log và báo cho tôi.
 
 Input: tin nhắn Messenger từ khách
