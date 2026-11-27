@@ -332,7 +332,7 @@ Yêu cầu:
 - Nếu khách hỏi mẫu ("cho xem mẫu 350k"), tra cột file_anh của mẫu đó rồi gửi ảnh qua attachment (đường dẫn tuyệt đối trên server).
 - Nếu khách hỏi "bảng giá" thì gửi kèm file PDF trên server.
 - Bật simulateTyping để hiện "đang soạn tin…".
-- Ghi log mọi tin vào Sheets, kèm quận khách nói để lần sau báo đúng phí.
+- Ghi log mọi tin vào sheet LOG (dùng chung cho mọi kênh): thời gian, kênh = "Zalo", nội dung, chuyển người (TRUE/FALSE), quận khách nói.
 
 Input: tin nhắn Zalo (text) từ khách
 Output: 1 tin trả lời (có thể kèm nhiều file: ảnh mẫu + PDF) + 1 dòng log
